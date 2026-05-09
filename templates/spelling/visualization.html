@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Spelling Correction - Visualization{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/spelling.css') }}">
+
+<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+
+  <!-- Tabs Header -->
+  <div class="mb-10 text-center">
+    <h1 class="mb-3 text-3xl font-black tracking-tight text-slate-800 dark:text-slate-100 sm:text-4xl">
+      Spelling <span class="bg-gradient-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent">Correction</span>
+    </h1>
+    <p class="text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+      Watch how algorithms compute the distance between two words dynamically.
+    </p>
+
+    <div class="mt-8 flex justify-center gap-2 border-b border-slate-200 dark:border-slate-800">
+      <a href="{{ url_for('spelling_page') }}" class="edu-tab active group relative">
+        <i class="fa-solid fa-code-compare mr-2 text-emerald-500 group-hover:text-emerald-600 transition-colors"></i> Visualization
+      </a>
+      <a href="{{ url_for('spelling_about_page') }}" class="edu-tab group relative opacity-70 hover:opacity-100">
+        <i class="fa-solid fa-book-open mr-2 text-cyan-500 group-hover:text-cyan-600 transition-colors"></i> About
+      </a>
+    </div>
+  </div>
+
+  <div class="spelling-layout">
+    <aside class="control-card">
+      <div class="space-y-4">
+        <div>
+          <label for="word1-input" class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">First Word</label>
+          <input type="text" id="word1-input" class="edu-input" placeholder="Enter first word (e.g., intention)">
+        </div>
+
+        <div>
+          <label for="word2-input" class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Second Word</label>
+          <input type="text" id="word2-input" class="edu-input" placeholder="Enter second word (e.g., execution)">
+        </div>
+
+        <div>
+          <label for="method-select" class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Correction Method</label>
+          <select id="method-select" class="edu-select">
+            <option value="edit_distance" selected>Edit Distance</option>
+            <option value="jaccard">Jaccard Coefficient (WIP)</option>
+            <option value="soundex">Soundex Algorithm (WIP)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <button id="start-btn" class="edu-btn-primary">
+          <i class="fa-solid fa-play mr-2"></i> Start Visualization
+        </button>
+      </div>
+    </aside>
+
+    <section class="viz-area">
+      <div class="viz-header flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h2 class="text-base font-bold text-slate-800 dark:text-slate-100">Edit Distance Matrix Construction</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Values are calculated in real time.</p>
+        </div>
+
+        <div class="viz-controls flex items-center gap-3">
+          <label for="viz-speed" class="text-xs text-slate-500 dark:text-slate-400">Animation Speed</label>
+          <select id="viz-speed" class="edu-select !py-1 !w-auto text-sm">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="explanation-panel" class="explanation-panel" style="opacity: 0;">
+        Waiting to start...
+      </div>
+
+      <div id="visualization-container" class="viz-steps">
+        <!-- Matrix will be rendered here -->
+        <div class="text-center text-slate-500 dark:text-slate-400 mt-10">
+          <i class="fa-solid fa-table-cells-large text-4xl mb-3 text-cyan-500/50"></i>
+          <p>Enter two words and click <strong>Start Visualization</strong> to build the matrix.</p>
+        </div>
+      </div>
+
+      <div id="result-card" class="result-card">
+        <h3>Result</h3>
+        <p>Minimum Changes Required = <span id="result-text">0</span></p>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/spelling.js') }}"></script>
+{% endblock %}

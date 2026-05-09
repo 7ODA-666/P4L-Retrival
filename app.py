@@ -241,7 +241,12 @@ def preprocessing_about_page() -> str:
 
 @app.route("/spelling")
 def spelling_page() -> str:
-    return render_template("spelling/index.html", **_page_context("spelling"))
+    return render_template("spelling/visualization.html", **_page_context("spelling"))
+
+
+@app.route("/spelling/about")
+def spelling_about_page() -> str:
+    return render_template("spelling/about.html", **_page_context("spelling"))
 
 
 @app.route("/retrieval")
@@ -377,6 +382,61 @@ def api_preprocess():
             },
         }
     )
+
+
+@app.route("/api/spelling/edit_distance", methods=["POST"])
+def api_edit_distance():
+    payload = request.get_json(silent=True) or {}
+    word1 = str(payload.get("word1", "")).strip().lower()
+    word2 = str(payload.get("word2", "")).strip().lower()
+
+    if not word1 or not word2:
+        return jsonify({"error": "Please provide both words."}), 400
+        
+    m, n = len(word1), len(word2)
+    matrix = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    # Initialize first column
+    for i in range(m + 1):
+        matrix[i][0] = i
+        
+    # Initialize first row
+    for j in range(n + 1):
+        matrix[0][j] = j
+        
+    steps = []
+    
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            chars_match = word1[i - 1] == word2[j - 1]
+            sub_cost = 0 if chars_match else 1
+            
+            sub_val = matrix[i - 1][j - 1] + sub_cost
+            del_val = matrix[i - 1][j] + 1
+            ins_val = matrix[i][j - 1] + 1
+            
+            min_val = min(sub_val, del_val, ins_val)
+            matrix[i][j] = min_val
+            
+            steps.append({
+                "i": i,
+                "j": j,
+                "char1": word1[i - 1],
+                "char2": word2[j - 1],
+                "chars_match": chars_match,
+                "sub_val": sub_val,
+                "del_val": del_val,
+                "ins_val": ins_val,
+                "min_val": min_val
+            })
+            
+    return jsonify({
+        "word1": word1,
+        "word2": word2,
+        "matrix": matrix,
+        "steps": steps,
+        "final_distance": matrix[m][n]
+    })
 
 
 @app.route("/healthz")
