@@ -40,7 +40,10 @@
           <div>
             <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Tokenization</h2>
             <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
-              Tokenization is the process of breaking text into smaller pieces called tokens. These are typically words, subwords, or symbols. It's the foundational step for any NLP pipeline, as it defines the basic units of meaning the system will analyze.
+              Tokenization is the process of breaking down text into individual words or phrases called tokens.
+            </p>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
+              These tokens are the basic building blocks used in information retrieval.
             </p>
             <div class="rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 font-mono text-sm shadow-inner group-hover:shadow-md transition-shadow">
               <span class="text-slate-500 dark:text-slate-500">Input:</span> "Hello World!"<br>
@@ -61,7 +64,8 @@
           <div>
             <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Stop Words Removal</h2>
             <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
-              Stop words are extremely common words (like "the", "is", "at", "which") that carry very little useful information for searching or analysis. Removing them helps the system focus on the keywords that actually convey the core meaning.
+              Stop words are common words (such as "the", "is", "at", "and", "to") that carry little meaning in
+              retrieval tasks and are often removed to reduce indexing size and improve search efficiency.
             </p>
             <div class="rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 font-mono text-sm shadow-inner group-hover:shadow-md transition-shadow">
               <span class="text-slate-500 dark:text-slate-500">Input:</span> ["This", "is", "a", "test"]<br>
@@ -82,13 +86,16 @@
           <div>
             <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Normalization</h2>
             <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
-              Normalization transforms text into a single canonical form to reduce variability and noise. Here are three common normalization operations with examples:
+              converting variations of the same word into a single representation.
+            </p>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
+              This includes:
             </p>
 
             <div class="norm-grid mt-3">
               <div class="norm-card rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 shadow-inner group-hover:shadow-md transition-shadow">
                 <h3 class="norm-title case">Case folding</h3>
-                <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-2">Convert text to a single case so that variants match consistently.</p>
+                <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-2">Converting all words to lowercase.</p>
                 <div class="font-mono text-sm text-slate-500 dark:text-slate-400">Example: <strong>"AI Research" → "ai research"</strong></div>
               </div>
 
@@ -119,7 +126,8 @@
           <div>
             <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Stemming</h2>
             <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
-              Stemming is a crude heuristic process that chops off the ends of words in the hope of achieving a root form. It operates very quickly by applying generalized suffix rules, though it sometimes produces non-real words (e.g., "ponies" -> "poni").
+              Stemming removes suffixes to obtain the base form of a word. It follows algorithmic rules and does
+              not consider word meaning <br> (e.g., "ponies" -> "poni").
             </p>
             <div class="rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 font-mono text-sm shadow-inner group-hover:shadow-md transition-shadow">
               <span class="text-slate-500 dark:text-slate-500">Input:</span> ["running", "runs", "runner"]<br>
@@ -140,7 +148,8 @@
           <div>
             <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Lemmatization</h2>
             <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
-              Lemmatization considers the context and converts the word to its meaningful dictionary base form, called a lemma. While slower than stemming, it relies on linguistic rules and vocabularies to produce accurate, real words (e.g., "better" -> "good").
+              Lemmatization converts words to their dictionary base form (lemma), considering the context and
+              meaning of the word <br> (e.g., "better" -> "good").
             </p>
             <div class="rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 font-mono text-sm shadow-inner group-hover:shadow-md transition-shadow">
               <span class="text-slate-500 dark:text-slate-500">Input:</span> ["better", "running", "mice"]<br>
@@ -158,18 +167,10 @@
         <h3 class="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-4">
           <i class="fa-brands fa-youtube text-red-500"></i> Video Explanation
         </h3>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
-          Watch a quick 2-minute overview covering the NLP preprocessing pipeline in modern systems.
-        </p>
 
-        <!-- Video Placeholder -->
-        <div class="aspect-video w-full overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-950 relative border border-slate-200 dark:border-slate-800 flex items-center justify-center group cursor-pointer transition-transform hover:scale-[1.02]">
-          <!-- Replace this iframe with your actual youtube video embed code -->
-          <iframe class="absolute inset-0 w-full h-full pointer-events-none opacity-50 filter grayscale mix-blend-multiply dark:mix-blend-screen" src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-          <div class="z-10 h-10 w-10 flex items-center justify-center rounded-full bg-red-600/90 text-white shadow-lg backdrop-blur-sm group-hover:bg-red-500 group-hover:scale-110 transition-all">
-            <i class="fa-solid fa-play text-xs ml-1"></i>
-          </div>
+        <!-- Video Placeholder (simple iframe, no overlay) -->
+        <div class="aspect-video w-full overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-950 relative border border-slate-200 dark:border-slate-800 flex items-center justify-center">
+          <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/2MSGqIIk-1I?si=lhmb3mC55Byap7iN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
     </div>
