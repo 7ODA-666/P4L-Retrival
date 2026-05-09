@@ -70,28 +70,35 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('cb-expanding_contractions')
         ];
 
+        const syncNormalizationParent = () => {
+            const enabledChildren = normChildren.filter(Boolean);
+            const checkedChildren = enabledChildren.filter(child => child.checked);
+            const allChecked = enabledChildren.length > 0 && checkedChildren.length === enabledChildren.length;
+            const anyChecked = checkedChildren.length > 0;
+
+            normParent.checked = allChecked;
+            normParent.indeterminate = anyChecked && !allChecked;
+        };
+
         normParent.addEventListener('change', (e) => {
             const isChecked = e.target.checked;
             normChildren.forEach(child => {
                 if (child) {
-                    child.disabled = !isChecked;
-                    if (isChecked && !child.checked) {
-                        child.checked = true;
-                    }
+                    child.checked = isChecked;
                 }
             });
+            normParent.indeterminate = false;
         });
 
         normChildren.forEach(child => {
             if (child) {
                 child.addEventListener('change', () => {
-                   const anyChecked = normChildren.some(c => c && c.checked);
-                   normParent.checked = anyChecked;
+                   syncNormalizationParent();
                 });
             }
         });
 
-        normParent.dispatchEvent(new Event('change'));
+        syncNormalizationParent();
     }
 
     function collectOperations() {
@@ -225,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           ${tokenMeta ? `<span class="tokens-badge">Tokens: ${tokenMeta}</span>` : ''}
                         </div>
                       </div>
-                      ${desc ? `<div class="step-desc" style="color:var(--text-muted, #94a3b8); font-size:0.85rem; padding-left:1.8rem; margin-top:-0.2rem;">${escapeHtml(desc)}</div>` : ''}
+                      ${desc ? `<div class="step-desc" style="padding-left:1.8rem; margin-top:-0.2rem;">${escapeHtml(desc)}</div>` : ''}
                     </div>
                     <div class="step-content">
                         ${contentHtml}

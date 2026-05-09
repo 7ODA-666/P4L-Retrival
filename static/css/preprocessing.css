@@ -138,6 +138,21 @@
   transform: rotate(45deg) scale(1);
 }
 
+.operation-item input:indeterminate + .operation-checkmark {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  border-color: #8b5cf6;
+}
+
+.operation-item input:indeterminate + .operation-checkmark::after {
+  left: 0.19rem;
+  top: 0.42rem;
+  width: 0.45rem;
+  height: 0;
+  border-width: 0 0 2px 0;
+  transform: scale(1);
+  border-color: #ffffff;
+}
+
 .operation-item input:focus-visible + .operation-checkmark {
   box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.18);
 }
