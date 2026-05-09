@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Preprocessing - About{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/preprocessing.css') }}">
+
+<div class="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+
+  <!-- Tabs Header -->
+  <div class="mb-10 text-center">
+    <h1 class="mb-3 text-3xl font-black tracking-tight text-slate-800 dark:text-slate-100 sm:text-4xl">
+      Text <span class="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Preprocessing</span>
+    </h1>
+    <p class="text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+      Learn the fundamental concepts of natural language formulation before retrieval.
+    </p>
+
+    <div class="mt-8 flex justify-center gap-2 border-b border-slate-200 dark:border-slate-800">
+      <a href="{{ url_for('preprocessing_page') }}" class="edu-tab group relative opacity-70 hover:opacity-100">
+        <i class="fa-solid fa-wand-magic-sparkles mr-2 text-cyan-500 group-hover:text-cyan-600 transition-colors"></i> Visualization
+      </a>
+      <a href="{{ url_for('preprocessing_about_page') }}" class="edu-tab active group relative">
+        <i class="fa-solid fa-book-open mr-2 text-purple-500 group-hover:text-purple-600 transition-colors"></i> About
+      </a>
+    </div>
+  </div>
+
+  <div class="grid gap-12 lg:grid-cols-[1fr_350px]">
+
+    <!-- Main Content: Educational Sections -->
+    <div class="space-y-12 pr-4">
+
+      <!-- Tokenization -->
+      <section class="group relative">
+        <div class="flex items-start gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-500 dark:text-indigo-400 shadow-sm">
+            <i class="fa-solid fa-code-branch"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Tokenization</h2>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
+              Tokenization is the process of breaking text into smaller pieces called tokens. These are typically words, subwords, or symbols. It's the foundational step for any NLP pipeline, as it defines the basic units of meaning the system will analyze.
+            </p>
+            <div class="rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 font-mono text-sm shadow-inner group-hover:shadow-md transition-shadow">
+              <span class="text-slate-500 dark:text-slate-500">Input:</span> "Hello World!"<br>
+              <span class="text-cyan-600 dark:text-cyan-400">Tokens:</span> ["Hello", "World", "!"]
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="border-slate-200 dark:border-slate-800/60">
+
+      <!-- Stop Words -->
+      <section class="group relative">
+        <div class="flex items-start gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-100 dark:bg-rose-900/30 text-rose-500 dark:text-rose-400 shadow-sm">
+            <i class="fa-solid fa-filter-circle-xmark"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Stop Words Removal</h2>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
+              Stop words are extremely common words (like "the", "is", "at", "which") that carry very little useful information for searching or analysis. Removing them helps the system focus on the keywords that actually convey the core meaning.
+            </p>
+            <div class="rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 font-mono text-sm shadow-inner group-hover:shadow-md transition-shadow">
+              <span class="text-slate-500 dark:text-slate-500">Input:</span> ["This", "is", "a", "test"]<br>
+              <span class="text-rose-500 dark:text-rose-400">Filtered:</span> ["This", "test"]
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="border-slate-200 dark:border-slate-800/60">
+
+      <!-- Normalization -->
+      <section class="group relative">
+        <div class="flex items-start gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-500 dark:text-emerald-400 shadow-sm">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Normalization</h2>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
+              Normalization transforms text into a single canonical form to reduce variability and noise. Here are three common normalization operations with examples:
+            </p>
+
+            <div class="norm-grid mt-3">
+              <div class="norm-card rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 shadow-inner group-hover:shadow-md transition-shadow">
+                <h3 class="norm-title case">Case folding</h3>
+                <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-2">Convert text to a single case so that variants match consistently.</p>
+                <div class="font-mono text-sm text-slate-500 dark:text-slate-400">Example: <strong>"AI Research" → "ai research"</strong></div>
+              </div>
+
+              <div class="norm-card rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 shadow-inner group-hover:shadow-md transition-shadow">
+                <h3 class="norm-title remove">Removing special characters</h3>
+                <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-2">Strip punctuation and symbols that add noise but not meaning.</p>
+                <div class="font-mono text-sm text-slate-500 dark:text-slate-400">Example: <strong>"Hello, world!!!" → "Hello world"</strong></div>
+              </div>
+
+              <div class="norm-card rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 shadow-inner group-hover:shadow-md transition-shadow">
+                <h3 class="norm-title expand">Expanding contractions</h3>
+                <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-2">Replace contractions with their full forms to improve consistency.</p>
+                <div class="font-mono text-sm text-slate-500 dark:text-slate-400">Example: <strong>"We're" → "we are"</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="border-slate-200 dark:border-slate-800/60">
+
+      <!-- Stemming -->
+      <section class="group relative">
+        <div class="flex items-start gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-500 dark:text-orange-400 shadow-sm">
+            <i class="fa-solid fa-scissors"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Stemming</h2>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
+              Stemming is a crude heuristic process that chops off the ends of words in the hope of achieving a root form. It operates very quickly by applying generalized suffix rules, though it sometimes produces non-real words (e.g., "ponies" -> "poni").
+            </p>
+            <div class="rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 font-mono text-sm shadow-inner group-hover:shadow-md transition-shadow">
+              <span class="text-slate-500 dark:text-slate-500">Input:</span> ["running", "runs", "runner"]<br>
+              <span class="text-orange-500 dark:text-orange-400">Stemmed:</span> ["run", "run", "runner"]
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="border-slate-200 dark:border-slate-800/60">
+
+      <!-- Lemmatization -->
+      <section class="group relative">
+        <div class="flex items-start gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 shadow-sm">
+            <i class="fa-solid fa-spell-check"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Lemmatization</h2>
+            <p class="text-sm leading-relaxed text-slate-600 dark:text-slate-400 mb-4">
+              Lemmatization considers the context and converts the word to its meaningful dictionary base form, called a lemma. While slower than stemming, it relies on linguistic rules and vocabularies to produce accurate, real words (e.g., "better" -> "good").
+            </p>
+            <div class="rounded-lg bg-slate-50 dark:bg-slate-900/50 p-4 border border-slate-200 dark:border-slate-800 font-mono text-sm shadow-inner group-hover:shadow-md transition-shadow">
+              <span class="text-slate-500 dark:text-slate-500">Input:</span> ["better", "running", "mice"]<br>
+              <span class="text-purple-500 dark:text-purple-400">Lemmas:</span> ["good", "run", "mouse"]
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Right Column: Video Panel -->
+    <div class="relative">
+      <div class="sticky top-28 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 p-5 shadow-xl shadow-purple-900/5 backdrop-blur-xl">
+        <h3 class="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-4">
+          <i class="fa-brands fa-youtube text-red-500"></i> Video Explanation
+        </h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          Watch a quick 2-minute overview covering the NLP preprocessing pipeline in modern systems.
+        </p>
+
+        <!-- Video Placeholder -->
+        <div class="aspect-video w-full overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-950 relative border border-slate-200 dark:border-slate-800 flex items-center justify-center group cursor-pointer transition-transform hover:scale-[1.02]">
+          <!-- Replace this iframe with your actual youtube video embed code -->
+          <iframe class="absolute inset-0 w-full h-full pointer-events-none opacity-50 filter grayscale mix-blend-multiply dark:mix-blend-screen" src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+          <div class="z-10 h-10 w-10 flex items-center justify-center rounded-full bg-red-600/90 text-white shadow-lg backdrop-blur-sm group-hover:bg-red-500 group-hover:scale-110 transition-all">
+            <i class="fa-solid fa-play text-xs ml-1"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

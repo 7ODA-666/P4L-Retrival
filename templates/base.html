@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="P4L Retrieval - a premium AI educational platform for information retrieval preprocessing.">
+  <title>{% block title %}P4L Retrieval{% endblock %}</title>
+
+  <script>
+    tailwind = window.tailwind || {};
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          boxShadow: {
+            glow: '0 0 0 1px rgba(34, 211, 238, 0.22), 0 0 42px rgba(34, 211, 238, 0.22)',
+            'glow-purple': '0 0 0 1px rgba(168, 85, 247, 0.22), 0 0 42px rgba(168, 85, 247, 0.22)',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100 font-[Inter] antialiased transition-colors duration-500">
+  <div class="site-shell relative min-h-screen overflow-hidden">
+    <div class="bg-orb bg-orb-cyan"></div>
+    <div class="bg-orb bg-orb-purple"></div>
+    <div class="bg-orb bg-orb-blue"></div>
+
+    <header class="sticky top-0 z-50 px-3 pt-3 sm:px-4 lg:px-6">
+      <nav class="mx-auto max-w-7xl rounded-[1.9rem] border border-white/10 bg-white/5 px-4 py-3 shadow-2xl shadow-cyan-950/15 backdrop-blur-2xl sm:px-5 lg:px-6">
+        <div class="flex items-center justify-between gap-4">
+          <a href="{{ url_for('home') }}" class="group flex items-center gap-3">
+            <span class="logo-badge">
+              <i class="fa-solid fa-magnifying-glass-chart"></i>
+            </span>
+            <span class="leading-tight">
+              <span class="block text-[0.68rem] font-semibold uppercase tracking-[0.35em] text-cyan-300/90">P4L Retrieval</span>
+              <span class="block text-lg font-black tracking-tight bg-gradient-to-r from-cyan-200 via-white to-purple-300 bg-clip-text text-transparent">AI Retrieval Platform</span>
+            </span>
+          </a>
+
+          <div class="hidden items-center gap-2 lg:flex">
+            <a href="{{ url_for('home') }}" class="nav-pill {% if active_page == 'home' %}active{% endif %}" data-nav-link>
+              <span class="nav-pill-line"></span>
+              Home
+            </a>
+            <a href="{{ url_for('preprocessing_page') }}" class="nav-pill {% if active_page == 'preprocessing' %}active{% endif %}" data-nav-link>
+              <span class="nav-pill-line"></span>
+              Preprocessing
+            </a>
+            <a href="{{ url_for('spelling_page') }}" class="nav-pill {% if active_page == 'spelling' %}active{% endif %}" data-nav-link>
+              <span class="nav-pill-line"></span>
+              Spelling Correction
+            </a>
+            <a href="{{ url_for('retrieval_page') }}" class="nav-pill {% if active_page == 'retrieval' %}active{% endif %}" data-nav-link>
+              <span class="nav-pill-line"></span>
+              Information Retrieval
+            </a>
+          </div>
+
+          <div class="flex items-center gap-2 sm:gap-3">
+            <a class="icon-chip" href="https://github.com/" target="_blank" rel="noreferrer" aria-label="GitHub">
+              <i class="fa-brands fa-github"></i>
+            </a>
+            <a class="icon-chip" href="https://www.youtube.com/" target="_blank" rel="noreferrer" aria-label="YouTube">
+              <i class="fa-brands fa-youtube"></i>
+            </a>
+
+            <button id="themeToggle" type="button" class="theme-toggle" aria-label="Toggle light and dark mode" aria-pressed="false">
+              <i class="fa-solid fa-moon theme-icon-dark"></i>
+              <i class="fa-solid fa-sun theme-icon-light hidden"></i>
+            </button>
+
+            <button id="mobileMenuButton" type="button" class="menu-toggle lg:hidden" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+              <i class="fa-solid fa-bars"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="mobileMenu" class="mobile-menu mt-4 hidden lg:hidden">
+          <div class="grid gap-2 rounded-[1.4rem] border border-white/10 bg-slate-950/60 p-3 backdrop-blur-xl">
+            <a href="{{ url_for('home') }}" class="mobile-nav-link {% if active_page == 'home' %}active{% endif %}" data-nav-link>Home</a>
+            <a href="{{ url_for('preprocessing_page') }}" class="mobile-nav-link {% if active_page == 'preprocessing' %}active{% endif %}" data-nav-link>Preprocessing</a>
+            <a href="{{ url_for('spelling_page') }}" class="mobile-nav-link {% if active_page == 'spelling' %}active{% endif %}" data-nav-link>Spelling Correction</a>
+            <a href="{{ url_for('retrieval_page') }}" class="mobile-nav-link {% if active_page == 'retrieval' %}active{% endif %}" data-nav-link>Information Retrieval</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="relative z-10">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="relative z-10 mt-16 border-t border-white/10 bg-slate-950/70 backdrop-blur-2xl">
+      <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr_0.8fr]">
+          <div class="space-y-4">
+            <div class="flex items-center gap-3">
+              <span class="logo-badge logo-badge-sm">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+              </span>
+              <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">P4L Retrieval</p>
+                <p class="text-sm text-slate-400">Premium AI educational platform</p>
+              </div>
+            </div>
+            <p class="max-w-xl text-sm leading-7 text-slate-400">
+              Built for students exploring information retrieval, text preprocessing, and modern NLP workflows through a polished dashboard experience.
+            </p>
+            <p class="text-sm font-medium text-slate-300">Built with Python &amp; NLP</p>
+          </div>
+
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Explore</p>
+            <div class="mt-4 grid gap-3 text-sm text-slate-400">
+              <a href="{{ url_for('home') }}" class="footer-link">Home</a>
+              <a href="{{ url_for('preprocessing_page') }}" class="footer-link">Preprocessing</a>
+              <a href="{{ url_for('spelling_page') }}" class="footer-link">Spelling Correction</a>
+              <a href="{{ url_for('retrieval_page') }}" class="footer-link">Information Retrieval</a>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-300">Social</p>
+            <div class="mt-4 flex flex-wrap gap-3">
+              <a class="icon-chip icon-chip-footer" href="https://github.com/" target="_blank" rel="noreferrer" aria-label="GitHub">
+                <i class="fa-brands fa-github"></i>
+              </a>
+              <a class="icon-chip icon-chip-footer" href="https://www.youtube.com/" target="_blank" rel="noreferrer" aria-label="YouTube">
+                <i class="fa-brands fa-youtube"></i>
+              </a>
+              <a class="icon-chip icon-chip-footer" href="https://www.linkedin.com/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                <i class="fa-brands fa-linkedin"></i>
+              </a>
+            </div>
+            <p class="mt-5 text-sm text-slate-500">© 2026 P4L Retrieval. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
+

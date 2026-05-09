@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Preprocessing - Visualization{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/preprocessing.css') }}">
+
+<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+
+  <!-- Tabs Header -->
+  <div class="mb-10 text-center">
+    <h1 class="mb-3 text-3xl font-black tracking-tight text-slate-800 dark:text-slate-100 sm:text-4xl">
+      Text <span class="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">Preprocessing</span>
+    </h1>
+    <p class="text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+      Watch how raw text transforms step-by-step into clean tokens ready for retrieval.
+    </p>
+
+    <div class="mt-8 flex justify-center gap-2 border-b border-slate-200 dark:border-slate-800">
+      <a href="{{ url_for('preprocessing_page') }}" class="edu-tab active group relative">
+        <i class="fa-solid fa-wand-magic-sparkles mr-2 text-cyan-500 group-hover:text-cyan-600 transition-colors"></i> Visualization
+      </a>
+      <a href="{{ url_for('preprocessing_about_page') }}" class="edu-tab group relative opacity-70 hover:opacity-100">
+        <i class="fa-solid fa-book-open mr-2 text-purple-500 group-hover:text-purple-600 transition-colors"></i> About
+      </a>
+    </div>
+  </div>
+
+  <div class="preprocessing-layout">
+    <aside class="control-card">
+      <div class="mb-5">
+        <label for="input-text" class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Input Text</label>
+        <textarea id="input-text" class="edu-textarea" placeholder="Enter text for preprocessing..."></textarea>
+      </div>
+
+      <div id="operations-container" class="space-y-2">
+        <p class="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Operations</p>
+
+        <label class="operation-item" for="cb-tokenization">
+          <input id="cb-tokenization" type="checkbox" value="tokenization" checked>
+          <span class="operation-checkmark" aria-hidden="true"></span>
+          <span class="operation-label">Tokenization</span>
+        </label>
+
+        <label class="operation-item" for="cb-remove_stop_words">
+          <input id="cb-remove_stop_words" type="checkbox" value="remove_stop_words" checked>
+          <span class="operation-checkmark" aria-hidden="true"></span>
+          <span class="operation-label">Remove Stop Words</span>
+        </label>
+
+        <div class="normalization-group">
+          <label class="operation-item" for="cb-normalization">
+            <input id="cb-normalization" type="checkbox" value="normalization" checked>
+            <span class="operation-checkmark" aria-hidden="true"></span>
+            <span class="operation-label">Normalization</span>
+          </label>
+
+          <div class="normalization-subops">
+            <label class="operation-item operation-item-sub" for="cb-case_folding">
+              <input id="cb-case_folding" type="checkbox" value="case_folding" checked>
+              <span class="operation-checkmark" aria-hidden="true"></span>
+              <span class="operation-label">Case Folding</span>
+            </label>
+
+            <label class="operation-item operation-item-sub" for="cb-removing_special_characters">
+              <input id="cb-removing_special_characters" type="checkbox" value="removing_special_characters" checked>
+              <span class="operation-checkmark" aria-hidden="true"></span>
+              <span class="operation-label">Removing Special Characters</span>
+            </label>
+
+            <label class="operation-item operation-item-sub" for="cb-expanding_contractions">
+              <input id="cb-expanding_contractions" type="checkbox" value="expanding_contractions" checked>
+              <span class="operation-checkmark" aria-hidden="true"></span>
+              <span class="operation-label">Expanding Contractions</span>
+            </label>
+          </div>
+        </div>
+
+        <label class="operation-item" for="cb-stemming">
+          <input id="cb-stemming" type="checkbox" value="stemming">
+          <span class="operation-checkmark" aria-hidden="true"></span>
+          <span class="operation-label">Stemming</span>
+        </label>
+
+        <label class="operation-item" for="cb-lemmatization">
+          <input id="cb-lemmatization" type="checkbox" value="lemmatization" checked>
+          <span class="operation-checkmark" aria-hidden="true"></span>
+          <span class="operation-label">Lemmatization</span>
+        </label>
+      </div>
+
+      <div class="mt-6 flex gap-2">
+        <button id="start-btn" class="edu-btn-primary flex-1">
+          <i class="fa-solid fa-play mr-2"></i> Start
+        </button>
+        <button id="clear-btn" class="edu-btn-secondary" type="button">Clear</button>
+      </div>
+    </aside>
+
+    <section class="viz-area">
+        <div class="viz-header flex items-start justify-between">
+            <div>
+              <h2 class="text-base font-bold text-slate-800 dark:text-slate-100">Real-Time Preprocessing Steps</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Each selected operation appears progressively below.</p>
+            </div>
+
+            <div class="viz-controls flex items-center gap-3">
+              <label for="viz-speed" class="text-xs text-slate-500 dark:text-slate-400">Visualization Speed</label>
+              <select id="viz-speed" class="speed-select" aria-label="Visualization Speed">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+
+      <div id="visualization-container" class="viz-steps">
+        <div class="viz-placeholder">
+          <i class="fa-solid fa-diagram-project text-cyan-500"></i>
+          <p>Enter text and click <strong>Start</strong> to visualize preprocessing.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/preprocessing.js') }}"></script>
+{% endblock %}
+

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}P4L Retrieval | Home{% endblock %}
+
+{% block content %}
+<section class="relative px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+  <div class="mx-auto max-w-7xl">
+    <div class="grid items-center gap-8 xl:grid-cols-[1.12fr_0.88fr]">
+      <div class="space-y-7 fade-in-up">
+        <span class="hero-badge">
+          <i class="fa-solid fa-house"></i>
+          Home
+        </span>
+
+        <div class="space-y-5">
+          <h1 class="hero-title">
+            Elegant NLP
+            <span class="hero-title-gradient">Retrieval Lab</span>
+          </h1>
+          <p class="hero-subtitle">
+            Explore a polished information storage and retrieval workspace built for learning text preprocessing, spelling correction, and ranking workflows.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <a href="{{ url_for('preprocessing_page') }}" class="primary-btn">
+            Start Exploring
+            <i class="fa-solid fa-arrow-right-long"></i>
+          </a>
+          <a href="{{ url_for('spelling_page') }}" class="secondary-btn">
+            View Spelling Module
+            <i class="fa-solid fa-wand-sparkles"></i>
+          </a>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-3">
+          <div class="stat-card">
+            <p class="stat-value">AI</p>
+            <p class="stat-label">dashboard feel</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-value">NLP</p>
+            <p class="stat-label">learning focus</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-value">UX</p>
+            <p class="stat-label">premium polish</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative fade-in-up delay-1">
+        <div class="panel-glow"></div>
+        <div class="glass-card p-6 sm:p-7 lg:p-8">
+          <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-5">
+            <div>
+              <p class="eyebrow">Platform introduction</p>
+              <h2 class="mt-2 text-2xl font-black text-white sm:text-3xl">A modern learning space for retrieval experiments</h2>
+              <p class="mt-2 max-w-lg text-sm leading-6 text-slate-300">
+                Start with preprocessing, then move into spelling correction and information retrieval modules as the project grows.
+              </p>
+            </div>
+            <div class="logo-badge">
+              <i class="fa-solid fa-magnifying-glass-chart"></i>
+            </div>
+          </div>
+
+          <div class="mt-5 grid gap-4 md:grid-cols-2">
+            <div class="mini-board">
+              <div class="shimmer-line shimmer-line-long"></div>
+              <div class="shimmer-line"></div>
+              <div class="shimmer-line shimmer-line-short"></div>
+            </div>
+            <div class="mini-board accent-board">
+              <p class="text-sm font-semibold text-white">What’s inside</p>
+              <ul class="mt-3 space-y-3 text-sm leading-6 text-slate-300">
+                <li><i class="fa-solid fa-check mr-2 text-cyan-300"></i>Glassmorphism UI</li>
+                <li><i class="fa-solid fa-check mr-2 text-cyan-300"></i>Animated workflow cards</li>
+                <li><i class="fa-solid fa-check mr-2 text-cyan-300"></i>Route-based navigation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
