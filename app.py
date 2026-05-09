@@ -439,6 +439,116 @@ def api_edit_distance():
     })
 
 
+def _get_bigrams(word: str) -> list[str]:
+    return [word[i:i+2] for i in range(len(word) - 1)] if len(word) > 1 else []
+
+@app.route("/api/spelling/jaccard", methods=["POST"])
+def api_jaccard():
+    payload = request.get_json(silent=True) or {}
+    word1 = str(payload.get("word1", "")).strip().lower()
+    word2 = str(payload.get("word2", "")).strip().lower()
+
+    if not word1 or not word2:
+        return jsonify({"error": "Please provide both words."}), 400
+
+    bg1 = _get_bigrams(word1)
+    bg2 = _get_bigrams(word2)
+
+    # We calculate counts
+    # Shared bigrams (intersection)
+    set1, set2 = set(bg1), set(bg2)
+    shared = list(set1.intersection(set2))
+
+    n1 = len(bg1)
+    n2 = len(bg2)
+    n_shared = len(shared)
+
+    union_size = n1 + n2 - n_shared
+    jaccard = round(n_shared / union_size, 4) if union_size > 0 else 0.0
+
+    return jsonify({
+        "word1": word1,
+        "word2": word2,
+        "bigrams1": bg1,
+        "bigrams2": bg2,
+        "shared": shared,
+        "n1": n1,
+        "n2": n2,
+        "n_shared": n_shared,
+        "union_size": union_size,
+        "jaccard": jaccard
+    })
+
+def _soundex_steps(word: str) -> dict[str, Any]:
+    if not word:
+        return {}
+
+    word = word.upper()
+    steps = {"original": word}
+
+    first_letter = word[0]
+    steps["step2_keep_first"] = first_letter
+
+    mapping = {
+        'B': '1', 'F': '1', 'P': '1', 'V': '1',
+        'C': '2', 'G': '2', 'J': '2', 'K': '2', 'Q': '2', 'S': '2', 'X': '2', 'Z': '2',
+        'D': '3', 'T': '3',
+        'L': '4',
+        'M': '5', 'N': '5',
+        'R': '6'
+    }
+
+    # Map remaining to digits, vowels/others to 0
+    mapped = first_letter
+    detailed_map = [first_letter]
+    for char in word[1:]:
+        digit = mapping.get(char, '0')
+        mapped += digit
+        detailed_map.append(f"{char}→{digit}")
+
+    steps["step3_mapped"] = mapped
+    steps["step3_details"] = detailed_map
+
+    # Remove consecutive duplicates
+    no_dups = mapped[0]
+    for i in range(1, len(mapped)):
+        if mapped[i] != mapped[i-1]:
+            no_dups += mapped[i]
+
+    steps["step4_no_dups"] = no_dups
+
+    # Remove zeros from positions after the first
+    no_zeros = no_dups[0] + no_dups[1:].replace('0', '')
+    steps["step5_no_zeros"] = no_zeros
+
+    # Pad or truncate
+    final_code = (no_zeros + "000")[:4]
+    steps["step6_final"] = final_code
+
+    return steps
+
+@app.route("/api/spelling/soundex", methods=["POST"])
+def api_soundex():
+    payload = request.get_json(silent=True) or {}
+    word1 = str(payload.get("word1", "")).strip()
+    word2 = str(payload.get("word2", "")).strip()
+
+    if not word1 or not word2:
+        return jsonify({"error": "Please provide both words."}), 400
+
+    steps1 = _soundex_steps(word1)
+    steps2 = _soundex_steps(word2)
+
+    match = steps1.get("step6_final") == steps2.get("step6_final")
+
+    return jsonify({
+        "word1": word1,
+        "word2": word2,
+        "steps1": steps1,
+        "steps2": steps2,
+        "match": match
+    })
+
 @app.route("/healthz")
 def healthz():
     return {"status": "ok", "app": "P4L Retrieval"}

@@ -43,8 +43,8 @@
           <label for="method-select" class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Correction Method</label>
           <select id="method-select" class="edu-select">
             <option value="edit_distance" selected>Edit Distance</option>
-            <option value="jaccard">Jaccard Coefficient (WIP)</option>
-            <option value="soundex">Soundex Algorithm (WIP)</option>
+            <option value="jaccard">Jaccard Coefficient</option>
+            <option value="soundex">Soundex Algorithm</option>
           </select>
         </div>
       </div>
@@ -59,8 +59,8 @@
     <section class="viz-area">
       <div class="viz-header flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h2 class="text-base font-bold text-slate-800 dark:text-slate-100">Edit Distance Matrix Construction</h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400">Values are calculated in real time.</p>
+          <h2 id="viz-title" class="text-base font-bold text-slate-800 dark:text-slate-100">Edit Distance Matrix Construction</h2>
+          <p id="viz-subtitle" class="text-xs text-slate-500 dark:text-slate-400">Values are calculated in real time.</p>
         </div>
 
         <div class="viz-controls flex items-center gap-3">
