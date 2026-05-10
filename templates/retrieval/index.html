@@ -3,46 +3,173 @@
 {% block title %}P4L Retrieval | Information Retrieval{% endblock %}
 
 {% block content %}
-<section class="px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-  <div class="mx-auto max-w-5xl">
-    <div class="glass-card p-6 sm:p-8 lg:p-10">
-      <span class="section-kicker">Information Retrieval</span>
-      <h1 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">Future-ready search and ranking workspace</h1>
-      <p class="mt-4 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">
-        This page is a premium placeholder for the retrieval module. It preserves the route structure while keeping the visual language consistent across the platform.
-      </p>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/retrieval.css') }}">
 
-      <div class="mt-8 grid gap-4 md:grid-cols-3">
-        <article class="module-preview-card">
-          <p class="eyebrow">Indexing</p>
-          <h3 class="mt-3 text-2xl font-bold text-white">Build searchable collections</h3>
-          <p class="mt-3 text-sm leading-6 text-slate-400">Add inverted indexes, document normalization, and vocabulary preparation later.</p>
-        </article>
+<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+  <!-- Header matching visualization.html style -->
+  <div class="mb-10 text-center">
+    <h1 class="mb-3 text-3xl font-black tracking-tight text-slate-800 dark:text-slate-100 sm:text-4xl">
+      Information <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Retrieval</span>
+    </h1>
+    <p class="text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+      Upload documents, build term-document matrices, and search efficiently through your collection.
+    </p>
 
-        <article class="module-preview-card">
-          <p class="eyebrow">Ranking</p>
-          <h3 class="mt-3 text-2xl font-bold text-white">Score query relevance</h3>
-          <p class="mt-3 text-sm leading-6 text-slate-400">Design ranking experiments with BM25, vector search, or hybrid retrieval workflows.</p>
-        </article>
+    <div class="mt-8 border-b border-white/10"></div>
+  </div>
 
-        <article class="module-preview-card module-preview-card-accent">
-          <p class="eyebrow">Evaluation</p>
-          <h3 class="mt-3 text-2xl font-bold text-white">Measure retrieval quality</h3>
-          <p class="mt-3 text-sm leading-6 text-slate-400">Track precision, recall, and MRR in a visually polished educational dashboard.</p>
-        </article>
+  <div class="retrieval-container">
+
+    <!-- LEFT SIDE: control panel card -->
+    <aside class="left-panel glass-card p-6">
+      <h2 class="text-xl font-bold mb-5 text-white">Retrieval Setup</h2>
+
+      <!-- 1. MULTIPLE FILE UPLOAD -->
+      <div class="mb-5">
+        <label class="block text-sm font-medium text-slate-300 mb-2">Upload Documents</label>
+        <div class="border-2 border-dashed border-slate-600 rounded-lg p-4 text-center hover:border-cyan-400 transition-colors cursor-pointer relative">
+          <input type="file" id="fileUpload" multiple accept=".txt,.pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+          <i class="fa-solid fa-cloud-arrow-up text-3xl text-cyan-500 mb-2"></i>
+          <p class="text-sm text-slate-300">Drag & drop or click to upload</p>
+          <p class="text-xs text-slate-500 mt-1">PDF, TXT supported</p>
+        </div>
       </div>
 
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a href="{{ url_for('preprocessing_page') }}" class="primary-btn">
-          Return to Preprocessing
-          <i class="fa-solid fa-arrow-right-long"></i>
-        </a>
-        <a href="{{ url_for('home') }}" class="secondary-btn">
-          Back to Home
-        </a>
+      <!-- 2. FILE LIST -->
+      <div id="fileList" class="mb-5 max-h-48 overflow-y-auto pr-2">
+        <!-- Uploaded files will appear here -->
       </div>
+
+      <!-- 3. ALGORITHM SELECT -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-300 mb-2">Retrieval Algorithm</label>
+        <select id="algoSelect" class="w-full bg-slate-900 border border-slate-700 rounded-md py-2 px-3 text-sm text-white focus:outline-none focus:border-cyan-500">
+          <option value="tdm">Term Document Matrix</option>
+          <option value="inverted" disabled>Inverted Index (Soon)</option>
+          <option value="bow" disabled>Bag of Words (Soon)</option>
+          <option value="tfidf" disabled>TF-IDF Weight Matrix (Soon)</option>
+        </select>
+      </div>
+
+      <!-- 4. BUTTONS -->
+      <div class="mt-6 flex gap-2">
+        <button id="prepareBtn" class="primary-btn flex-1 justify-center">
+          <i class="fa-solid fa-play mr-2"></i> Start Preparing
+        </button>
+        <button id="clearBtn" class="secondary-btn justify-center text-red-400 border-red-900 hover:bg-red-900/20" type="button">Clear</button>
+      </div>
+    </aside>
+
+    <!-- RIGHT SIDE: workspace card -->
+    <main class="right-panel glass-card p-6 min-h-[500px]">
+
+      <!-- Tabs Header -->
+      <div class="tab-nav">
+        <button class="tab-btn active" data-target="tab-visual">Visualization</button>
+        <button class="tab-btn" data-target="tab-search">Search</button>
+        <button class="tab-btn" data-target="tab-about">About</button>
+      </div>
+
+      <!-- Tab 1: Visualization -->
+      <div id="tab-visual" class="tab-content active">
+            <div id="v-success" class="hidden mb-6 p-4 bg-green-900/30 border border-green-500/50 rounded-lg text-green-300 font-medium flex items-center gap-3">
+              <i class="fa-solid fa-circle-check"></i>
+              Preparation Complete — You can now search.
+            </div>
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <label class="text-xs text-slate-400 mr-2">Visualization Speed</label>
+                <select id="viz-speed" class="bg-slate-900 border border-slate-700 rounded-md py-1 px-2 text-sm text-white">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+
+        <div id="v-original" class="mb-8">
+          <p class="text-slate-400 italic">Upload files and start preparing to see the original text.</p>
+        </div>
+        <div id="v-preprocessing" class="mb-8"></div>
+        <div id="v-matrix"></div>
+        <div id="v-success-bottom" class="hidden mt-6 p-4 bg-green-900/30 border border-green-500/50 rounded-lg text-green-300 font-medium flex items-center gap-3">
+          <i class="fa-solid fa-circle-check"></i>
+          Preparation Complete — You can now search.
+        </div>
+      </div>
+
+      <!-- Tab 2: Search -->
+      <div id="tab-search" class="tab-content">
+        <div class="mb-8">
+          <h3 class="text-xl font-bold mb-4">Search Engine</h3>
+          <div class="flex gap-3">
+            <input type="text" id="searchInput" placeholder="Enter your query..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 shadow-inner">
+            <button id="searchBtn" class="primary-btn px-6"><i class="fa-solid fa-search"></i> Search</button>
+          </div>
+        </div>
+
+        <div id="searchResults" class="mt-8">
+          <p class="text-slate-500 italic">Search results will appear here.</p>
+        </div>
+      </div>
+
+      <!-- Tab 3: About -->
+      <div id="tab-about" class="tab-content">
+        <h3 class="text-2xl font-bold mb-4">About Term Document Matrix</h3>
+        <div class="glass-card p-5 mb-6 bg-slate-900/50 border border-purple-500/20">
+          <p class="mb-4 text-slate-300">A term-document matrix is a mathematical matrix that describes the frequency of terms that occur in a collection of documents. In this boolean model, we indicate the presence or absence of a term with a 1 or 0.</p>
+          <p class="mb-2 font-bold text-cyan-300">Preprocessing Importance:</p>
+          <p class="text-slate-300 text-sm">Tokenization, stop-word removal, and lemmatization reduce the vocabulary size and group similar words together, improving retrieval accuracy and efficiency.</p>
+        </div>
+
+        <div class="mb-6 max-w-3xl mx-auto border border-slate-700 rounded overflow-hidden">
+           <iframe
+             class="w-full aspect-video"
+             src="https://www.youtube.com/embed/CRPoXUPeYtw?si=q3c3tuPA8y1mWqAj"
+             title="YouTube video player"
+             frameborder="0"
+             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+             referrerpolicy="strict-origin-when-cross-origin"
+             allowfullscreen>
+           </iframe>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-2 text-purple-300">Example Matrix</h4>
+          <p class="text-sm text-slate-400 mb-2">Doc1: "information retrieval" | Doc2: "retrieval systems"</p>
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-800">
+              <tr>
+                <th class="p-2">Term</th><th class="p-2">Doc 1</th><th class="p-2">Doc 2</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              <tr><td class="p-2">information</td><td class="p-2">1</td><td class="p-2">0</td></tr>
+              <tr><td class="p-2">retrieval</td><td class="p-2">1</td><td class="p-2">1</td></tr>
+              <tr><td class="p-2">systems</td><td class="p-2">0</td><td class="p-2">1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal Popup for Document Preview -->
+<div id="docModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle" class="text-xl font-bold text-cyan-300">Document Title</h3>
+      <button id="closeModal" class="text-slate-400 hover:text-white transition-colors">
+        <i class="fa-solid fa-xmark text-xl"></i>
+      </button>
+    </div>
+    <div id="modalBody" class="modal-body text-slate-300">
+      <!-- Content here -->
     </div>
   </div>
-</section>
-{% endblock %}
+</div>
 
+<script src="{{ url_for('static', filename='js/retrieval.js') }}"></script>
+{% endblock %}

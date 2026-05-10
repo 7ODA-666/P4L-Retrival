@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     startBtn.addEventListener('click', async () => {
         const text = inputText.value.trim();
         if (!text) {
-            alert('Please enter some text to preprocess.');
+            if (window.showNotification) showNotification('Please enter some text to preprocess.', 'warn');
+            else alert('Please enter some text to preprocess.');
             return;
         }
 
@@ -34,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             if (data.error) {
-                alert(data.error);
+                if (window.showNotification) showNotification(data.error, 'error');
+                else alert(data.error);
                 return;
             }
 
@@ -42,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
             renderVisualizationSteps(expandedSteps);
         } catch (error) {
             console.error('Error fetching preprocessing data:', error);
-            alert('An error occurred during preprocessing.');
+            if (window.showNotification) showNotification('An error occurred during preprocessing.', 'error');
+            else alert('An error occurred during preprocessing.');
         } finally {
             startBtn.disabled = false;
             startBtn.innerHTML = '<i class="fa-solid fa-play mr-2"></i> Start';
@@ -51,6 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
+            const wasEmpty = !inputText.value.trim() && visualizationContainer && visualizationContainer.querySelector('.viz-placeholder');
+            if (wasEmpty) {
+                if (window.showNotification) showNotification('Already clear.', 'info');
+                else alert('Already clear.');
+                return;
+            }
             inputText.value = '';
             visualizationContainer.innerHTML = `
                 <div class="viz-placeholder">
@@ -59,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             inputText.focus();
+            if (window.showNotification) showNotification('Cleared.', 'success');
         });
     }
 

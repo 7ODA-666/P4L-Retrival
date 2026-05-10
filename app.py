@@ -14,7 +14,7 @@ import nltk
 from nltk.corpus import stopwords as nltk_stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
-
+import PyPDF2
 
 app = Flask(__name__)
 
@@ -163,6 +163,20 @@ def _stem_tokens(tokens: list[str]) -> list[str]:
 def _lemmatize_tokens(tokens: list[str]) -> list[str]:
     return [_lemmatize_token(token.lower()) for token in tokens]
 
+def _preprocess_pipeline(text: str) -> list[str]:
+    """Full preprocessing pipeline: normalization, tokenization, stopword removal, lemmatization"""
+    # 1. Normalization (case folding, char removal, whitespace collapse)
+    text = text.lower()
+    text = _expand_contractions(text)
+    text = re.sub(r"[^A-Za-z0-9\s]", " ", text)
+    text = _collapse_whitespace(text)
+    # 2. Tokenization
+    tokens = _tokenize_text(text)
+    # 3. Stop Word Removal
+    tokens = _remove_stop_words(tokens)
+    # 4. Lemmatization
+    tokens = _lemmatize_tokens(tokens)
+    return tokens
 
 def _stage_payload(key: str, title: str, icon: str, before: Any, after: Any, *, implicit: bool = False, note: str | None = None) -> dict[str, Any]:
     return {
@@ -252,6 +266,121 @@ def spelling_about_page() -> str:
 @app.route("/retrieval")
 def retrieval_page() -> str:
     return render_template("retrieval/index.html", **_page_context("retrieval"))
+
+
+@app.route("/api/retrieval/prepare", methods=["POST"])
+def api_retrieval_prepare():
+    files = request.files.getlist("files")
+    if not files:
+        return jsonify({"error": "No files provided."}), 400
+
+    docs = []
+    all_tokens_set = set()
+
+    for file in files:
+        if not file.filename:
+            continue
+        text = ""
+        filename = file.filename
+
+        try:
+            if filename.lower().endswith(".pdf"):
+                reader = PyPDF2.PdfReader(file)
+                for page in reader.pages:
+                    text += (page.extract_text() or "") + " "
+            elif filename.lower().endswith(".txt"):
+                text = file.read().decode("utf-8", errors="ignore")
+            else:
+                continue
+
+        except Exception as e:
+            text = f"Error reading file: {e}"
+
+        text = text.strip() or "Empty document"
+        tokens = _preprocess_pipeline(text)
+        all_tokens_set.update(tokens)
+
+        docs.append({
+            "name": filename,
+            "original_text": text,
+            "tokens": tokens
+        })
+
+    vocabulary = sorted(list(all_tokens_set))
+
+    # Generate term vector for each document
+    for doc in docs:
+        doc_tokens_set = set(doc["tokens"])
+        doc["term_vector"] = [1 if term in doc_tokens_set else 0 for term in vocabulary]
+
+    return jsonify({
+        "vocabulary": vocabulary,
+        "docs": docs
+    })
+
+
+@app.route("/api/retrieval/search", methods=["POST"])
+def api_retrieval_search():
+    payload = request.get_json(silent=True) or {}
+    query = payload.get("query", "")
+    matrix_data = payload.get("matrix_data", {})
+
+    if not query or not matrix_data:
+        return jsonify({"error": "Query or matrix data missing."}), 400
+
+    vocabulary = matrix_data.get("vocabulary", [])
+    docs = matrix_data.get("docs", [])
+
+    query_tokens = _preprocess_pipeline(query)
+    query_vector = [1 if term in query_tokens else 0 for term in vocabulary]
+
+    results = []
+
+    # Calculate similarity (dot product of binary vectors)
+    import math
+    for doc in docs:
+        doc_vector = doc["term_vector"]
+
+        # dot product
+        dot_product = sum(q * d for q, d in zip(query_vector, doc_vector))
+
+        # magnitudes
+        q_mag = math.sqrt(sum(q * q for q in query_vector))
+        d_mag = math.sqrt(sum(d * d for d in doc_vector))
+
+        if q_mag == 0 or d_mag == 0:
+            score = 0
+        else:
+            score = dot_product / (q_mag * d_mag)
+
+        if score > 0:
+            # Find a snippet
+            original_text = doc["original_text"]
+            snippet = original_text[:100] # default snippet
+
+            # Simple snippet logic: find first matching term in text
+            words = original_text.split()
+            for i, word in enumerate(words):
+                if _lemmatize_token(word.lower().strip(",.!?()\"'")) in query_tokens:
+                    start = max(0, i - 5)
+                    end = min(len(words), i + 15)
+                    snippet = " ".join(words[start:end])
+                    break
+
+            results.append({
+                "name": doc["name"],
+                "score": score,
+                "snippet": snippet,
+                "doc": doc,
+                "query_tokens": query_tokens
+            })
+
+    # Sort descending by score
+    results.sort(key=lambda x: x["score"], reverse=True)
+
+    return jsonify({
+        "results": results
+    })
 
 
 @app.route("/api/preprocess", methods=["POST"])

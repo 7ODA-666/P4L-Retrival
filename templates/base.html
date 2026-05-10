@@ -26,6 +26,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/notifications.js') }}" defer></script>
 </head>
 <body class="min-h-screen bg-slate-950 text-slate-100 font-[Inter] antialiased transition-colors duration-500">
   <div class="site-shell relative min-h-screen overflow-hidden">
@@ -149,6 +150,8 @@
   </div>
 
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <!-- Notification container (used by pages for toast-style alerts) -->
+  <div id="notify-container" aria-live="polite" aria-atomic="true"></div>
 </body>
 </html>
 

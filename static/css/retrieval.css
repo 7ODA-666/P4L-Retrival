@@ -1,0 +1,232 @@
+/* retrieval.css */
+.retrieval-container {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.left-panel {
+  flex: 0 0 30%;
+  position: sticky;
+  top: 6rem;
+}
+
+.right-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+.tab-nav {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  color: #94a3b8;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+  color: #e2e8f0;
+}
+
+.tab-btn.active {
+  color: #22d3ee;
+  border-bottom-color: #22d3ee;
+}
+
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+.file-list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.05);
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.file-list-item i {
+  color: #22d3ee;
+  font-size: 1.5rem;
+}
+
+.file-list-item {
+  justify-content: space-between;
+}
+
+.file-list-item > div:last-child {
+  flex-shrink: 0;
+}
+
+.file-list-item > div:nth-child(2) {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.file-remove-btn {
+  background: transparent;
+  border: none;
+  color: #fb7185; /* soft red */
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.file-remove-btn i { pointer-events: none; }
+
+/* Custom scrollbar for the file list to match site visuals */
+#fileList {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34,211,238,0.25) rgba(15,23,42,0.12);
+}
+#fileList::-webkit-scrollbar {
+  height: 8px;
+  width: 10px;
+}
+#fileList::-webkit-scrollbar-track {
+  background: transparent;
+}
+#fileList::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(34,211,238,0.18), rgba(168,85,247,0.18));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Matrix Table */
+.matrix-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.matrix-table th, .matrix-table td {
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+.matrix-table th {
+  background: rgba(255,255,255,0.1);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+.matrix-table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #0f172a;
+  text-align: left;
+}
+.matrix-table td:first-child {
+  position: sticky;
+  left: 0;
+  background: #0f172a;
+  text-align: left;
+  font-weight: 500;
+}
+.matrix-row-anim {
+  animation: fadeIn 0.5s ease forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card appearance animation used for Original and Preprocessing cards */
+.card-anim {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: cardFadeIn 420ms ease forwards;
+}
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.998); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Modal Popup */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.active {
+  display: flex;
+}
+.modal-content {
+  background: #0f172a;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.highlight-match {
+  background: rgba(34, 211, 238, 0.3);
+  color: #fff;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+/* Horizontal scrollbar styling for the matrix container */
+.matrix-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34,211,238,0.24) transparent;
+}
+.matrix-container::-webkit-scrollbar {
+  height: 10px; /* horizontal scrollbar thickness */
+}
+.matrix-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.matrix-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(34,211,238,0.22), rgba(168,85,247,0.22));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.matrix-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, rgba(34,211,238,0.36), rgba(168,85,247,0.36));
+}
+
+/* Ensure the table headers remain visible over the scrollbar area on small screens */
+.matrix-table thead th {
+  z-index: 3;
+}
+

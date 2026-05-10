@@ -57,7 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const word2 = word2Input.value.trim();
 
         if (!word1 || !word2) {
-            alert("Please enter both words.");
+            if (window.showNotification) showNotification('Please enter both words.', 'warn');
+            else alert("Please enter both words.");
             return;
         }
 
@@ -98,13 +99,33 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
         } catch (err) {
-            vizContainer.innerHTML = `<div class="text-red-400 p-4">${err.message}</div>`;
+            if (window.showNotification) showNotification(err.message || 'Processing error', 'error');
+            else vizContainer.innerHTML = `<div class="text-red-400 p-4">${err.message}</div>`;
         } finally {
             isAnimating = false;
             startBtn.disabled = false;
             startBtn.innerHTML = '<i class="fa-solid fa-play mr-2"></i> Start Visualization';
         }
     });
+
+    // Clear button handler will be added if a clear button exists in the DOM
+    const clearBtn = document.getElementById('clear-btn-spelling');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            const wasEmpty = !word1Input.value.trim() && !word2Input.value.trim();
+            word1Input.value = '';
+            word2Input.value = '';
+            vizContainer.innerHTML = `<div class="text-center text-slate-500 dark:text-slate-400 mt-10"><i class="fa-solid fa-play text-4xl mb-3 text-cyan-500/50"></i><p>Enter two words and click <strong>Start Visualization</strong>.</p></div>`;
+            resultCard.style.display = 'none';
+            if (wasEmpty) {
+                if (window.showNotification) showNotification('Already clear.', 'info');
+                else alert('Already clear.');
+            } else {
+                if (window.showNotification) showNotification('Cleared.', 'success');
+                else alert('Cleared.');
+            }
+        });
+    }
 
     async function animateMatrix(data) {
         const { word1, word2, matrix, steps, final_distance } = data;
