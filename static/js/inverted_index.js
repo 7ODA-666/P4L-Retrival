@@ -1,14 +1,15 @@
 // inverted_index.js
 
 async function renderInvertedVisualization(data, speedKey) {
-    const stepDelay = window.getVisualizationDelay ? window.getVisualizationDelay(speedKey) : 200;
+    const stepDelay = window.getVisualizationDelay ? window.getVisualizationDelay(speedKey) : 900;
     const vMatrix = document.getElementById('v-matrix');
     const topSuccess = document.getElementById('v-success');
     const bottomSuccess = document.getElementById('v-success-bottom');
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-    await window.renderOriginalCards(data.docs, stepDelay);
-    await window.renderPreprocessingCards(data.docs, stepDelay);
+    if (window.renderSharedStages) {
+        await window.renderSharedStages(data.docs, speedKey);
+    }
 
     // 3. Vocabulary extraction
     const vocTitle = document.createElement('h3');
@@ -97,11 +98,15 @@ function renderInvertedAboutContent() {
           <p class="mb-2 font-bold text-cyan-300">Core idea:</p>
           <p class="text-slate-300 text-sm">Search becomes fast because we look up terms directly in posting lists instead of scanning all documents.</p>
         </div>
-        <div class="mb-6 max-w-3xl mx-auto border border-slate-700 rounded overflow-hidden bg-black flex items-center justify-center aspect-video">
-           <div class="text-slate-500 flex flex-col items-center">
-              <i class="fa-solid fa-play text-4xl mb-2 text-slate-700"></i>
-              <span>Educational Video Placeholder</span>
-           </div>
+        <div class="mb-6 max-w-2xl mx-auto border border-slate-700 rounded overflow-hidden bg-black">
+           <iframe
+             class="w-full aspect-video"
+             src="https://www.youtube.com/embed/Aeqw1GdDlwg?si=kn2BwgqeW7YoFiVK"
+             title="Inverted Index Educational Video"
+             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+             referrerpolicy="strict-origin-when-cross-origin"
+             allowfullscreen>
+           </iframe>
         </div>
         <div>
           <h4 class="font-bold mb-2 text-purple-300">Example Posting Lists</h4>

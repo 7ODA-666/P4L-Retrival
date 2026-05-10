@@ -218,6 +218,17 @@ footer {
   box-shadow: 0 22px 55px rgba(168, 85, 247, 0.28);
 }
 
+.primary-btn:disabled,
+.primary-btn:disabled:hover {
+  background: rgba(71, 85, 105, 0.55);
+  color: rgba(226, 232, 240, 0.75);
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+  filter: grayscale(0.35);
+  opacity: 0.78;
+}
+
 .secondary-btn {
   background: rgba(255, 255, 255, 0.06);
   color: #e2e8f0;

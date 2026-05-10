@@ -1,15 +1,137 @@
 // retrieval.js
 let uploadedFiles = [];
 let matrixData = null;
+
 const SHARED_STOPWORDS = new Set([
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "has", "he",
     "in", "is", "it", "its", "of", "on", "that", "the", "to", "was", "were", "will",
     "with", "this", "these", "those", "they", "their", "you", "your", "we", "our", "or"
 ]);
 
+function getVisualizationDelay(speedKey) {
+    const speedMap = { low: 1350, medium: 1050, high: 320 };
+    return speedMap[speedKey] || 900;
+}
+
+function getSearchResultDelay(speedKey) {
+    const speedMap = { low: 260, medium: 190, high: 95 };
+    return speedMap[speedKey] || 190;
+}
+
+function sharedPreprocessTokens(text) {
+    const normalized = String(text || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    if (!normalized) return [];
+    return normalized.split(" ").filter((token) => token && !SHARED_STOPWORDS.has(token));
+}
+
+function escapeHtml(text) {
+    return String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function escapeRegExp(text) {
+    return String(text || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlightContent(text, tokens) {
+    const sourceText = String(text || "");
+    const normalizedTokens = Array.from(
+        new Set((tokens || []).map((t) => String(t || "").trim()).filter(Boolean))
+    ).sort((a, b) => b.length - a.length);
+
+    if (!normalizedTokens.length) {
+        return escapeHtml(sourceText);
+    }
+
+    const pattern = normalizedTokens.map(escapeRegExp).join("|");
+    const regex = new RegExp(`\\b(${pattern})\\b`, "gi");
+
+    let result = "";
+    let lastIndex = 0;
+    sourceText.replace(regex, (match, _group, offset) => {
+        result += escapeHtml(sourceText.slice(lastIndex, offset));
+        result += `<mark class="bg-yellow-400/40 text-yellow-100 px-0.5 rounded">${escapeHtml(match)}</mark>`;
+        lastIndex = offset + match.length;
+        return match;
+    });
+    result += escapeHtml(sourceText.slice(lastIndex));
+    return result;
+}
+
+function openDocPreview(title, docData, tokens) {
+    document.getElementById("modalTitle").textContent = title;
+    const content = docData ? docData.original_text : "Preview content...";
+    const highlighted = highlightContent(content, tokens || []);
+    document.getElementById("modalBody").innerHTML = `<p class="whitespace-pre-wrap leading-relaxed">${highlighted}</p>`;
+    document.getElementById("docModal").classList.add("active");
+}
+
+async function renderOriginalCards(docs, delayMs) {
+    const vOriginal = document.getElementById("v-original");
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const title = document.createElement("h3");
+    title.className = "text-xl font-bold mb-3";
+    title.textContent = "Original Text";
+    vOriginal.appendChild(title);
+
+    for (const doc of docs) {
+        const card = document.createElement("div");
+        card.className = "glass-card p-4 mb-3 border border-slate-700/50";
+        card.innerHTML = `
+            <h4 class="font-bold text-cyan-300 mb-2 truncate">${doc.name}</h4>
+            <div class="text-sm text-slate-300 max-h-28 overflow-y-auto">${doc.original_text}</div>
+        `;
+        vOriginal.appendChild(card);
+        await sleep(Math.max(60, delayMs / 2));
+    }
+}
+
+async function renderPreprocessingCards(docs, delayMs) {
+    const vPre = document.getElementById("v-preprocessing");
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const title = document.createElement("h3");
+    title.className = "text-xl font-bold mb-3 mt-8 border-t border-slate-700/50 pt-8";
+    title.textContent = "After Preprocessing";
+    vPre.appendChild(title);
+
+    for (const doc of docs) {
+        const card = document.createElement("div");
+        card.className = "glass-card p-4 mb-3 border border-purple-500/20";
+        card.innerHTML = `
+            <div class="flex items-center justify-between gap-3 mb-2">
+              <h4 class="font-bold text-purple-300 truncate">${doc.name}</h4>
+              <span class="text-xs text-emerald-400"><i class="fa-solid fa-layer-group"></i> ${doc.tokens.length} tokens</span>
+            </div>
+            <div class="text-sm font-mono text-cyan-200 break-words leading-relaxed">
+              ${doc.tokens.length > 0
+                ? doc.tokens.map((t) => `<span class="bg-cyan-900/30 text-cyan-100 px-1 py-0.5 rounded mr-1 mb-1 inline-block">${t}</span>`).join("")
+                : '<span class="text-slate-500">empty</span>'}
+            </div>
+        `;
+        vPre.appendChild(card);
+        await sleep(Math.max(80, delayMs / 2));
+    }
+}
+
+async function renderSharedStages(docs, speedKey) {
+    const stepDelay = getVisualizationDelay(speedKey);
+    await renderOriginalCards(docs, stepDelay);
+    await renderPreprocessingCards(docs, stepDelay);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const fileUpload = document.getElementById("fileUpload");
-    const fileListEl = document.getElementById("fileList");
     const prepareBtn = document.getElementById("prepareBtn");
     const clearBtn = document.getElementById("clearBtn");
     const algoSelect = document.getElementById("algoSelect");
@@ -79,7 +201,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: formData
             });
             const data = await res.json();
-            if(data.error) throw new Error(data.error);
+            if (data.error) {
+                if (window.showNotification) showNotification(data.error, 'error');
+                else alert(data.error);
+                enablePrepare();
+                return;
+            }
 
             matrixData = data;
 
@@ -90,9 +217,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 await window.renderInvertedVisualization(data, speedKey);
             } else if (window.renderTDMVisualization) {
                 await window.renderTDMVisualization(data, speedKey);
-            } else {
-                await renderVisualization(data); // fallback if somehow external mod fails
+            } else if (window.renderSharedStages) {
+                await window.renderSharedStages(data.docs, speedKey);
             }
+
+            setPreparedState();
         } catch (e) {
             if (window.showNotification) showNotification(e.message || 'Preparation failed', 'error');
             else alert(e.message);
@@ -122,7 +251,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
             });
             const data = await res.json();
-            if(data.error) throw new Error(data.error);
+            if (data.error) {
+                if (window.showNotification) showNotification(data.error, 'error');
+                else alert(data.error);
+                return;
+            }
             renderSearchResults(data.results);
         } catch(e) {
             if (window.showNotification) showNotification(e.message || 'Search failed', 'error');
@@ -153,12 +286,11 @@ function renderAboutContent() {
             <div class="glass-card p-5 mb-6 bg-slate-900/50 border border-purple-500/20">
               <p class="mb-4 text-slate-300">A term-document matrix is a mathematical matrix that describes the frequency of terms that occur in a collection of documents. In this boolean model, we indicate the presence or absence of a term with a 1 or 0.</p>
             </div>
-            <div class="mb-6 max-w-3xl mx-auto border border-slate-700 rounded overflow-hidden">
+            <div class="mb-6 max-w-2xl mx-auto border border-slate-700 rounded overflow-hidden">
                <iframe
                  class="w-full aspect-video"
                  src="https://www.youtube.com/embed/CRPoXUPeYtw?si=q3c3tuPA8y1mWqAj"
                  title="YouTube video player"
-                 frameborder="0"
                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                  referrerpolicy="strict-origin-when-cross-origin"
                  allowfullscreen>
@@ -186,6 +318,13 @@ function enablePrepare() {
     btn.disabled = false;
     btn.style.opacity = '1';
     btn.textContent = 'Start Preparing';
+}
+
+function setPreparedState() {
+    const btn = document.getElementById("prepareBtn");
+    btn.disabled = true;
+    btn.style.opacity = '0.85';
+    btn.textContent = 'Prepared';
 }
 
 function resetState() {
@@ -244,91 +383,6 @@ function removeFile(index) {
     enablePrepare();
 }
 
-function getVisualizationDelay(speedKey) {
-    const speedMap = { low: 1200, medium: 850, high: 250 };
-    return speedMap[speedKey] || 800;
-}
-
-function getSearchResultDelay(speedKey) {
-    const speedMap = { low: 220, medium: 140, high: 80 };
-    return speedMap[speedKey] || 140;
-}
-
-function sharedPreprocessTokens(text) {
-    const normalized = String(text || "")
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
-
-    if (!normalized) return [];
-    return normalized.split(" ").filter((token) => token && !SHARED_STOPWORDS.has(token));
-}
-
-async function renderOriginalCards(docs, delayMs) {
-    const vOriginal = document.getElementById("v-original");
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-    const title = document.createElement("h3");
-    title.className = "text-xl font-bold mb-3";
-    title.textContent = "Original Text";
-    vOriginal.appendChild(title);
-
-    for (const doc of docs) {
-        const card = document.createElement("div");
-        card.className = "glass-card p-4 mb-3 border border-slate-700/50";
-        card.innerHTML = `
-            <h4 class="font-bold text-cyan-300 mb-2 truncate">${doc.name}</h4>
-            <div class="text-sm text-slate-300 max-h-28 overflow-y-auto">${doc.original_text}</div>
-        `;
-        vOriginal.appendChild(card);
-        await sleep(Math.max(60, delayMs / 2));
-    }
-}
-
-async function renderPreprocessingCards(docs, delayMs) {
-    const vPre = document.getElementById("v-preprocessing");
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-    const title = document.createElement("h3");
-    title.className = "text-xl font-bold mb-3 mt-8 border-t border-slate-700/50 pt-8";
-    title.textContent = "After Preprocessing";
-    vPre.appendChild(title);
-
-    for (const doc of docs) {
-        const card = document.createElement("div");
-        card.className = "glass-card p-4 mb-3 border border-purple-500/20";
-        card.innerHTML = `
-            <div class="flex items-center justify-between gap-3 mb-2">
-              <h4 class="font-bold text-purple-300 truncate">${doc.name}</h4>
-              <span class="text-xs text-emerald-400"><i class="fa-solid fa-layer-group"></i> ${doc.tokens.length} tokens</span>
-            </div>
-            <div class="text-sm font-mono text-cyan-200 break-words leading-relaxed">
-              ${doc.tokens.length > 0
-                ? doc.tokens.map((t) => `<span class="bg-cyan-900/30 text-cyan-100 px-1 py-0.5 rounded mr-1 mb-1 inline-block">${t}</span>`).join("")
-                : '<span class="text-slate-500">empty</span>'}
-            </div>
-        `;
-        vPre.appendChild(card);
-        await sleep(Math.max(80, delayMs / 2));
-    }
-}
-
-async function renderVisualization(data) {
-    const speedSel = document.getElementById("viz-speed");
-    const speedKey = speedSel ? speedSel.value : "medium";
-    const stepDelay = getVisualizationDelay(speedKey);
-
-    await renderOriginalCards(data.docs, stepDelay);
-    await renderPreprocessingCards(data.docs, stepDelay);
-
-    if (window.renderTDMVisualization) {
-        await window.renderTDMVisualization(data, speedKey, true);
-    }
-}
-
-// Ensure the old renderVisualization can be deleted since we modularized it.
-// I will not extract the `renderSearchResults` here, it stays in `retrieval.js`.
 function renderSearchResults(results) {
     const list = document.getElementById("searchResults");
     list.innerHTML = "";
@@ -363,7 +417,7 @@ function renderSearchResults(results) {
             </div>
         `;
 
-        item.addEventListener("click", () => openDocPreview(r.name, r.doc || null, highlightTokens));
+        item.addEventListener("click", () => window.openDocPreview(r.name, r.doc || null, highlightTokens));
         list.appendChild(item);
 
         // Staggered reveal animation for search results
@@ -373,54 +427,14 @@ function renderSearchResults(results) {
     });
 }
 
-function escapeHtml(text) {
-    return String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-}
-
-function escapeRegExp(text) {
-    return String(text || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function highlightContent(text, tokens) {
-    const sourceText = String(text || "");
-    const normalizedTokens = Array.from(
-        new Set((tokens || []).map((t) => String(t || "").trim()).filter(Boolean))
-    ).sort((a, b) => b.length - a.length);
-
-    if (!normalizedTokens.length) {
-        return escapeHtml(sourceText);
-    }
-
-    const pattern = normalizedTokens.map(escapeRegExp).join("|");
-    const regex = new RegExp(`\\b(${pattern})\\b`, "gi");
-
-    let result = "";
-    let lastIndex = 0;
-    sourceText.replace(regex, (match, _group, offset) => {
-        result += escapeHtml(sourceText.slice(lastIndex, offset));
-        result += `<mark class="bg-yellow-400/40 text-yellow-100 px-0.5 rounded">${escapeHtml(match)}</mark>`;
-        lastIndex = offset + match.length;
-        return match;
-    });
-    result += escapeHtml(sourceText.slice(lastIndex));
-    return result;
-}
-
-function openDocPreview(title, docData, tokens) {
-    document.getElementById("modalTitle").textContent = title;
-    const content = docData ? docData.original_text : "Preview content...";
-    const highlighted = highlightContent(content, tokens || []);
-    document.getElementById("modalBody").innerHTML = `<p class="whitespace-pre-wrap leading-relaxed">${highlighted}</p>`;
-    document.getElementById("docModal").classList.add("active");
-}
-
 window.getVisualizationDelay = getVisualizationDelay;
+window.getSearchResultDelay = getSearchResultDelay;
+window.sharedPreprocessTokens = sharedPreprocessTokens;
 window.renderOriginalCards = renderOriginalCards;
 window.renderPreprocessingCards = renderPreprocessingCards;
-window.sharedPreprocessTokens = sharedPreprocessTokens;
+window.renderSharedStages = renderSharedStages;
+window.escapeHtml = escapeHtml;
+window.escapeRegExp = escapeRegExp;
+window.highlightContent = highlightContent;
+window.openDocPreview = openDocPreview;
 

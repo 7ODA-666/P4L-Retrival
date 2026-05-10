@@ -1,7 +1,7 @@
 // term_document.js
 
 async function renderTDMVisualization(data, speedKey, skipSharedStages) {
-    const stepDelay = window.getVisualizationDelay ? window.getVisualizationDelay(speedKey) : 200;
+    const stepDelay = window.getVisualizationDelay ? window.getVisualizationDelay(speedKey) : 900;
 
     const vMatrix = document.getElementById('v-matrix');
     const topSuccess = document.getElementById('v-success');
@@ -10,8 +10,9 @@ async function renderTDMVisualization(data, speedKey, skipSharedStages) {
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
     if (!skipSharedStages) {
-        await window.renderOriginalCards(data.docs, stepDelay);
-        await window.renderPreprocessingCards(data.docs, stepDelay);
+        await (window.renderSharedStages
+            ? window.renderSharedStages(data.docs, speedKey)
+            : Promise.resolve());
     }
 
     // 3. Matrix Building

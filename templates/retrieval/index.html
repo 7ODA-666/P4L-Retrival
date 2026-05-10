@@ -42,7 +42,7 @@
 
       <!-- 3. ALGORITHM SELECT -->
       <div class="mb-6">
-        <label class="block text-sm font-medium text-slate-300 mb-2">Retrieval Algorithm</label>
+        <label for="algoSelect" class="block text-sm font-medium text-slate-300 mb-2">Retrieval Algorithm</label>
         <select id="algoSelect" class="w-full bg-slate-900 border border-slate-700 rounded-md py-2 px-3 text-sm text-white focus:outline-none focus:border-cyan-500">
           <option value="tdm">Term Document Matrix</option>
           <option value="inverted">Inverted Index</option>
@@ -78,7 +78,7 @@
             </div>
             <div class="flex items-center justify-between mb-4">
               <div>
-                <label class="text-xs text-slate-400 mr-2">Visualization Speed</label>
+                <label for="viz-speed" class="text-xs text-slate-400 mr-2">Visualization Speed</label>
                 <select id="viz-speed" class="bg-slate-900 border border-slate-700 rounded-md py-1 px-2 text-sm text-white">
                   <option value="low">Low</option>
                   <option value="medium" selected>Medium</option>
@@ -102,6 +102,7 @@
       <div id="tab-search" class="tab-content">
         <div class="mb-8">
           <h3 class="text-xl font-bold mb-4">Search Engine</h3>
+          <label for="searchInput" class="sr-only">Search query</label>
           <div class="flex gap-3">
             <input type="text" id="searchInput" placeholder="Enter your query..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 shadow-inner">
             <button id="searchBtn" class="primary-btn px-6"><i class="fa-solid fa-search"></i> Search</button>
@@ -139,7 +140,7 @@
   </div>
 </div>
 
+<script src="{{ url_for('static', filename='js/retrieval.js') }}"></script>
 <script src="{{ url_for('static', filename='js/term_document.js') }}"></script>
 <script src="{{ url_for('static', filename='js/inverted_index.js') }}"></script>
-<script src="{{ url_for('static', filename='js/retrieval.js') }}"></script>
 {% endblock %}
