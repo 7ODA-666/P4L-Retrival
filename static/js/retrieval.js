@@ -215,6 +215,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (algo === 'inverted' && window.renderInvertedVisualization) {
                 await window.renderInvertedVisualization(data, speedKey);
+            } else if (algo === 'bow' && window.renderBoWVisualization) {
+                await window.renderBoWVisualization(data, speedKey);
             } else if (window.renderTDMVisualization) {
                 await window.renderTDMVisualization(data, speedKey);
             } else if (window.renderSharedStages) {
@@ -237,6 +239,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const algo = algoSelect.value;
             if (algo === "inverted" && window.searchInvertedIndex) {
                 const localResults = window.searchInvertedIndex(query, matrixData);
+                renderSearchResults(localResults);
+                return;
+            } else if (algo === "bow" && window.searchBoW) {
+                const localResults = window.searchBoW(query, matrixData);
                 renderSearchResults(localResults);
                 return;
             }
@@ -268,48 +274,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Initial Render of About Page
+    const activeTab = document.querySelector(".tab-btn.active").getAttribute("data-target");
+    if (activeTab === "tab-about") {
+        renderAboutContent();
+    }
+
     renderAboutContent();
 });
 
 function renderAboutContent() {
     const algo = document.getElementById("algoSelect").value;
-    const aboutContainer = document.getElementById("aboutContent");
+    const container = document.getElementById("aboutContent");
 
-    if (algo === 'inverted') {
-        aboutContainer.innerHTML = window.renderInvertedAboutContent
-            ? window.renderInvertedAboutContent()
-            : '<p class="text-slate-400">Inverted index content is unavailable.</p>';
-    } else {
-        // Default TDM About
-        aboutContainer.innerHTML = `
-            <h3 class="text-2xl font-bold mb-4">About Term Document Matrix</h3>
-            <div class="glass-card p-5 mb-6 bg-slate-900/50 border border-purple-500/20">
-              <p class="mb-4 text-slate-300">A term-document matrix is a mathematical matrix that describes the frequency of terms that occur in a collection of documents. In this boolean model, we indicate the presence or absence of a term with a 1 or 0.</p>
-            </div>
-            <div class="mb-6 max-w-2xl mx-auto border border-slate-700 rounded overflow-hidden">
-               <iframe
-                 class="w-full aspect-video"
-                 src="https://www.youtube.com/embed/CRPoXUPeYtw?si=q3c3tuPA8y1mWqAj"
-                 title="YouTube video player"
-                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                 referrerpolicy="strict-origin-when-cross-origin"
-                 allowfullscreen>
-               </iframe>
-            </div>
-            <div>
-              <h4 class="font-bold mb-2 text-purple-300">Example Matrix</h4>
-              <table class="w-full text-left text-sm">
-                <thead class="bg-slate-800">
-                  <tr><th class="p-2">Term</th><th class="p-2">Doc 1</th><th class="p-2">Doc 2</th></tr>
-                </thead>
-                <tbody class="divide-y divide-slate-800">
-                  <tr><td class="p-2">information</td><td class="p-2">1</td><td class="p-2">0</td></tr>
-                  <tr><td class="p-2">retrieval</td><td class="p-2">1</td><td class="p-2">1</td></tr>
-                  <tr><td class="p-2">systems</td><td class="p-2">0</td><td class="p-2">1</td></tr>
-                </tbody>
-              </table>
-            </div>
-        `;
+    if (algo === "inverted" && window.getInvertedIndexAboutHTML) {
+        container.innerHTML = window.getInvertedIndexAboutHTML();
+    } else if (algo === "bow" && window.getBoWAboutHTML) {
+        container.innerHTML = window.getBoWAboutHTML();
+    } else if (window.getTDMAboutHTML) {
+        container.innerHTML = window.getTDMAboutHTML();
     }
 }
 

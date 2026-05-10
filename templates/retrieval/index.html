@@ -46,7 +46,7 @@
         <select id="algoSelect" class="w-full bg-slate-900 border border-slate-700 rounded-md py-2 px-3 text-sm text-white focus:outline-none focus:border-cyan-500">
           <option value="tdm">Term Document Matrix</option>
           <option value="inverted">Inverted Index</option>
-          <option value="bow" disabled>Bag of Words (Soon)</option>
+          <option value="bow">Bag of Words</option>
           <option value="tfidf" disabled>TF-IDF Weight Matrix (Soon)</option>
         </select>
       </div>
@@ -54,7 +54,7 @@
       <!-- 4. BUTTONS -->
       <div class="mt-6 flex gap-2">
         <button id="prepareBtn" class="primary-btn flex-1 justify-center">
-          <i class="fa-solid fa-play mr-2"></i> Start Preparing
+           Start Preparing
         </button>
         <button id="clearBtn" class="secondary-btn justify-center text-red-400 border-red-900 hover:bg-red-900/20" type="button">Clear</button>
       </div>
@@ -143,4 +143,5 @@
 <script src="{{ url_for('static', filename='js/retrieval.js') }}"></script>
 <script src="{{ url_for('static', filename='js/term_document.js') }}"></script>
 <script src="{{ url_for('static', filename='js/inverted_index.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bag_of_words.js') }}"></script>
 {% endblock %}
