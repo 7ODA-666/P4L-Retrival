@@ -45,7 +45,7 @@
         <label class="block text-sm font-medium text-slate-300 mb-2">Retrieval Algorithm</label>
         <select id="algoSelect" class="w-full bg-slate-900 border border-slate-700 rounded-md py-2 px-3 text-sm text-white focus:outline-none focus:border-cyan-500">
           <option value="tdm">Term Document Matrix</option>
-          <option value="inverted" disabled>Inverted Index (Soon)</option>
+          <option value="inverted">Inverted Index</option>
           <option value="bow" disabled>Bag of Words (Soon)</option>
           <option value="tfidf" disabled>TF-IDF Weight Matrix (Soon)</option>
         </select>
@@ -115,40 +115,8 @@
 
       <!-- Tab 3: About -->
       <div id="tab-about" class="tab-content">
-        <h3 class="text-2xl font-bold mb-4">About Term Document Matrix</h3>
-        <div class="glass-card p-5 mb-6 bg-slate-900/50 border border-purple-500/20">
-          <p class="mb-4 text-slate-300">A term-document matrix is a mathematical matrix that describes the frequency of terms that occur in a collection of documents. In this boolean model, we indicate the presence or absence of a term with a 1 or 0.</p>
-          <p class="mb-2 font-bold text-cyan-300">Preprocessing Importance:</p>
-          <p class="text-slate-300 text-sm">Tokenization, stop-word removal, and lemmatization reduce the vocabulary size and group similar words together, improving retrieval accuracy and efficiency.</p>
-        </div>
-
-        <div class="mb-6 max-w-3xl mx-auto border border-slate-700 rounded overflow-hidden">
-           <iframe
-             class="w-full aspect-video"
-             src="https://www.youtube.com/embed/CRPoXUPeYtw?si=q3c3tuPA8y1mWqAj"
-             title="YouTube video player"
-             frameborder="0"
-             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-             referrerpolicy="strict-origin-when-cross-origin"
-             allowfullscreen>
-           </iframe>
-        </div>
-
-        <div>
-          <h4 class="font-bold mb-2 text-purple-300">Example Matrix</h4>
-          <p class="text-sm text-slate-400 mb-2">Doc1: "information retrieval" | Doc2: "retrieval systems"</p>
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-800">
-              <tr>
-                <th class="p-2">Term</th><th class="p-2">Doc 1</th><th class="p-2">Doc 2</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800">
-              <tr><td class="p-2">information</td><td class="p-2">1</td><td class="p-2">0</td></tr>
-              <tr><td class="p-2">retrieval</td><td class="p-2">1</td><td class="p-2">1</td></tr>
-              <tr><td class="p-2">systems</td><td class="p-2">0</td><td class="p-2">1</td></tr>
-            </tbody>
-          </table>
+        <div id="aboutContent">
+          <!-- Dynamic About Content Will Be Loaded Here -->
         </div>
       </div>
 
@@ -171,5 +139,7 @@
   </div>
 </div>
 
+<script src="{{ url_for('static', filename='js/term_document.js') }}"></script>
+<script src="{{ url_for('static', filename='js/inverted_index.js') }}"></script>
 <script src="{{ url_for('static', filename='js/retrieval.js') }}"></script>
 {% endblock %}

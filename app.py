@@ -178,6 +178,74 @@ def _preprocess_pipeline(text: str) -> list[str]:
     tokens = _lemmatize_tokens(tokens)
     return tokens
 
+
+def _build_inverted_index(docs: list[dict[str, Any]]) -> dict[str, Any]:
+    index: dict[str, list[str]] = {}
+    all_tokens_set: set[str] = set()
+
+    for doc in docs:
+        doc_name = str(doc.get("name", ""))
+        seen_in_doc: set[str] = set()
+        for token in doc.get("tokens", []):
+            all_tokens_set.add(token)
+            if token in seen_in_doc:
+                continue
+            seen_in_doc.add(token)
+            index.setdefault(token, []).append(doc_name)
+
+    return {
+        "vocabulary": sorted(all_tokens_set),
+        "index": index,
+    }
+
+
+def _build_snippet(original_text: str, target_terms: set[str]) -> str:
+    snippet = original_text[:100]
+    words = original_text.split()
+    for i, word in enumerate(words):
+        cleaned = _lemmatize_token(word.lower().strip(",.!?()\"'"))
+        if cleaned in target_terms:
+            start = max(0, i - 5)
+            end = min(len(words), i + 15)
+            snippet = " ".join(words[start:end])
+            break
+    return snippet
+
+
+def _search_inverted_index(query: str, index_data: dict[str, Any], docs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    query_tokens = _preprocess_pipeline(query)
+    query_set = set(query_tokens)
+    index = index_data.get("index", {})
+
+    doc_scores: dict[str, dict[str, Any]] = {}
+    for token in query_tokens:
+        for doc_name in index.get(token, []):
+            if doc_name not in doc_scores:
+                doc_scores[doc_name] = {"score": 0, "matched_terms": set()}
+            doc_scores[doc_name]["score"] += 1
+            doc_scores[doc_name]["matched_terms"].add(token)
+
+    results: list[dict[str, Any]] = []
+    for doc_name, score_data in doc_scores.items():
+        doc = next((d for d in docs if d.get("name") == doc_name), None)
+        if not doc:
+            continue
+        matched_terms = sorted(score_data["matched_terms"])
+        score = score_data["score"] / len(query_tokens) if query_tokens else 0
+        snippet = _build_snippet(str(doc.get("original_text", "")), query_set)
+        results.append(
+            {
+                "name": doc_name,
+                "score": score,
+                "matched_terms": matched_terms,
+                "snippet": f"{snippet}...",
+                "doc": doc,
+            }
+        )
+
+    results.sort(key=lambda item: item["score"], reverse=True)
+    return results
+
 def _stage_payload(key: str, title: str, icon: str, before: Any, after: Any, *, implicit: bool = False, note: str | None = None) -> dict[str, Any]:
     return {
         "key": key,
@@ -271,6 +339,8 @@ def retrieval_page() -> str:
 @app.route("/api/retrieval/prepare", methods=["POST"])
 def api_retrieval_prepare():
     files = request.files.getlist("files")
+    algorithm = request.form.get("algorithm", "tdm")
+
     if not files:
         return jsonify({"error": "No files provided."}), 400
 
@@ -308,22 +378,32 @@ def api_retrieval_prepare():
 
     vocabulary = sorted(list(all_tokens_set))
 
-    # Generate term vector for each document
-    for doc in docs:
-        doc_tokens_set = set(doc["tokens"])
-        doc["term_vector"] = [1 if term in doc_tokens_set else 0 for term in vocabulary]
+    if algorithm == "inverted":
+        index_data = _build_inverted_index(docs)
+        return jsonify({
+            "algorithm": "inverted",
+            "vocabulary": index_data["vocabulary"],
+            "index": index_data["index"],
+            "docs": docs
+        })
+    else:
+        # TDM logic (default)
+        for doc in docs:
+            doc_tokens_set = set(doc["tokens"])
+            doc["term_vector"] = [1 if term in doc_tokens_set else 0 for term in vocabulary]
 
-    return jsonify({
-        "vocabulary": vocabulary,
-        "docs": docs
-    })
-
+        return jsonify({
+            "algorithm": "tdm",
+            "vocabulary": vocabulary,
+            "docs": docs
+        })
 
 @app.route("/api/retrieval/search", methods=["POST"])
 def api_retrieval_search():
     payload = request.get_json(silent=True) or {}
     query = payload.get("query", "")
     matrix_data = payload.get("matrix_data", {})
+    algorithm = payload.get("algorithm", "tdm")
 
     if not query or not matrix_data:
         return jsonify({"error": "Query or matrix data missing."}), 400
@@ -331,6 +411,11 @@ def api_retrieval_search():
     vocabulary = matrix_data.get("vocabulary", [])
     docs = matrix_data.get("docs", [])
 
+    if algorithm == "inverted":
+        results = _search_inverted_index(query, matrix_data, docs)
+        return jsonify({"results": results})
+
+    # TDM SEARCH
     query_tokens = _preprocess_pipeline(query)
     query_vector = [1 if term in query_tokens else 0 for term in vocabulary]
 
