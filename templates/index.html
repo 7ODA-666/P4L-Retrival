@@ -1,83 +1,95 @@
 {% extends "base.html" %}
 
-{% block title %}P4L Retrieval | Home{% endblock %}
+{% block title %}P4L Retrieval | Educational Platform{% endblock %}
 
 {% block content %}
-<section class="relative px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+<!-- Hero Section -->
+<section class="relative px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
   <div class="mx-auto max-w-7xl">
-    <div class="grid items-center gap-8 xl:grid-cols-[1.12fr_0.88fr]">
-      <div class="space-y-7 fade-in-up">
-        <span class="hero-badge">
-          <i class="fa-solid fa-house"></i>
-          Home
-        </span>
+    <div class="grid items-center gap-12 xl:grid-cols-[1.15fr_0.85fr]">
+      <!-- Left: Hero Content -->
+      <div class="space-y-8 fade-in-up">
+        <div class="inline-block">
+          <span class="hero-badge">
+            <i class="fa-solid fa-flask-vial"></i>
+            Interactive Learning Platform
+          </span>
+        </div>
 
-        <div class="space-y-5">
+        <div class="space-y-6">
           <h1 class="hero-title">
-            Elegant NLP
-            <span class="hero-title-gradient">Retrieval Lab</span>
+            P4L Retrieval
+            <span class="hero-title-gradient">Educational Platform</span>
           </h1>
           <p class="hero-subtitle">
-            Explore a polished information storage and retrieval workspace built for learning text preprocessing, spelling correction, and ranking workflows.
+            Learn information retrieval, preprocessing, and search algorithms through real-time interactive visualizations. Perfect for students exploring NLP and search engine concepts.
           </p>
         </div>
 
         <div class="flex flex-wrap gap-3">
-          <a href="{{ url_for('preprocessing_page') }}" class="primary-btn">
-            Start Exploring
-            <i class="fa-solid fa-arrow-right-long"></i>
+          <a href="#modules-section" class="primary-btn">
+            Explore Platform
+            <i class="fa-solid fa-arrow-down"></i>
           </a>
-          <a href="{{ url_for('spelling_page') }}" class="secondary-btn">
-            View Spelling Module
-            <i class="fa-solid fa-wand-sparkles"></i>
+          <a href="{{ url_for('preprocessing_page') }}" class="secondary-btn">
+            Start Learning
+            <i class="fa-solid fa-book-open"></i>
           </a>
         </div>
 
-        <div class="grid gap-3 sm:grid-cols-3">
+        <!-- Quick Stats -->
+        <div class="grid gap-3 sm:grid-cols-3 pt-4">
           <div class="stat-card">
-            <p class="stat-value">AI</p>
-            <p class="stat-label">dashboard feel</p>
+            <p class="stat-value">5+</p>
+            <p class="stat-label">Algorithms</p>
           </div>
           <div class="stat-card">
-            <p class="stat-value">NLP</p>
-            <p class="stat-label">learning focus</p>
+            <p class="stat-value">3</p>
+            <p class="stat-label">Core Modules</p>
           </div>
           <div class="stat-card">
-            <p class="stat-value">UX</p>
-            <p class="stat-label">premium polish</p>
+            <p class="stat-value">100%</p>
+            <p class="stat-label">Interactive</p>
           </div>
         </div>
       </div>
 
+      <!-- Right: Visual Illustration -->
       <div class="relative fade-in-up delay-1">
         <div class="panel-glow"></div>
-        <div class="glass-card p-6 sm:p-7 lg:p-8">
-          <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-5">
-            <div>
-              <p class="eyebrow">Platform introduction</p>
-              <h2 class="mt-2 text-2xl font-black text-white sm:text-3xl">A modern learning space for retrieval experiments</h2>
-              <p class="mt-2 max-w-lg text-sm leading-6 text-slate-300">
-                Start with preprocessing, then move into spelling correction and information retrieval modules as the project grows.
-              </p>
+        <div class="glass-card p-8 h-full flex items-center justify-center min-h-96">
+          <div class="text-center space-y-6">
+            <!-- Animated IR Visualization -->
+            <div class="flex justify-center gap-4 mb-8">
+              <div class="animate-pulse">
+                <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-cyan-500/40 to-purple-500/40 flex items-center justify-center text-2xl">
+                  <i class="fa-solid fa-magnifying-glass text-cyan-300"></i>
+                </div>
+              </div>
+              <div class="flex items-center text-cyan-300 text-2xl">→</div>
+              <div class="animate-pulse" style="animation-delay: 0.5s;">
+                <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-purple-500/40 to-blue-500/40 flex items-center justify-center text-2xl">
+                  <i class="fa-solid fa-database text-purple-300"></i>
+                </div>
+              </div>
+              <div class="flex items-center text-purple-300 text-2xl">→</div>
+              <div class="animate-pulse" style="animation-delay: 1s;">
+                <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-500/40 to-cyan-500/40 flex items-center justify-center text-2xl">
+                  <i class="fa-solid fa-chart-line text-blue-300"></i>
+                </div>
+              </div>
             </div>
-            <div class="logo-badge">
-              <i class="fa-solid fa-magnifying-glass-chart"></i>
-            </div>
-          </div>
 
-          <div class="mt-5 grid gap-4 md:grid-cols-2">
-            <div class="mini-board">
-              <div class="shimmer-line shimmer-line-long"></div>
-              <div class="shimmer-line"></div>
-              <div class="shimmer-line shimmer-line-short"></div>
+            <div class="space-y-2">
+              <p class="text-sm font-semibold text-cyan-300 uppercase tracking-wide">Information Retrieval Pipeline</p>
+              <p class="text-sm text-slate-400">Query • Index • Rank</p>
             </div>
-            <div class="mini-board accent-board">
-              <p class="text-sm font-semibold text-white">What’s inside</p>
-              <ul class="mt-3 space-y-3 text-sm leading-6 text-slate-300">
-                <li><i class="fa-solid fa-check mr-2 text-cyan-300"></i>Glassmorphism UI</li>
-                <li><i class="fa-solid fa-check mr-2 text-cyan-300"></i>Animated workflow cards</li>
-                <li><i class="fa-solid fa-check mr-2 text-cyan-300"></i>Route-based navigation</li>
-              </ul>
+
+            <!-- Algorithm Badges -->
+            <div class="flex flex-wrap justify-center gap-2 pt-4">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 border border-cyan-500/30 text-cyan-300">TF-IDF</span>
+              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 border border-purple-500/30 text-purple-300">Indexing</span>
+              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 border border-blue-500/30 text-blue-300">Ranking</span>
             </div>
           </div>
         </div>
@@ -85,5 +97,347 @@
     </div>
   </div>
 </section>
-{% endblock %}
 
+<!-- What is Information Retrieval Section -->
+<section class="relative px-4 py-16 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="glass-card p-8 sm:p-10 lg:p-12">
+      <div class="max-w-3xl mx-auto space-y-6">
+        <div class="space-y-3">
+          <h2 class="text-3xl sm:text-4xl font-black text-white flex items-center gap-3">
+            <i class="fa-solid fa-circle-question text-cyan-400 text-2xl"></i>
+            What is Information Retrieval?
+          </h2>
+        </div>
+
+        <p class="text-lg leading-relaxed text-slate-300">
+          Information Retrieval (IR) is the science of finding relevant documents or information from large collections based on user queries. It powers search engines like Google, recommendation systems, and knowledge bases.
+        </p>
+
+        <div class="grid sm:grid-cols-3 gap-4 pt-4">
+          <div class="border border-cyan-500/20 rounded-lg p-4 bg-cyan-500/5">
+            <p class="text-sm text-cyan-300 font-semibold uppercase tracking-wide mb-2">Core Concept</p>
+            <p class="text-slate-300">Finding relevant documents efficiently from massive databases</p>
+          </div>
+          <div class="border border-purple-500/20 rounded-lg p-4 bg-purple-500/5">
+            <p class="text-sm text-purple-300 font-semibold uppercase tracking-wide mb-2">Real-World Use</p>
+            <p class="text-slate-300">Google search, document retrieval, content discovery</p>
+          </div>
+          <div class="border border-blue-500/20 rounded-lg p-4 bg-blue-500/5">
+            <p class="text-sm text-blue-300 font-semibold uppercase tracking-wide mb-2">Key Operations</p>
+            <p class="text-slate-300">Indexing, querying, ranking, and relevance scoring</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Platform Modules Section -->
+<section id="modules-section" class="relative px-4 py-16 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="text-center space-y-3 mb-12">
+      <h2 class="text-3xl sm:text-4xl font-black text-white">Learning Modules</h2>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto">Explore three core modules covering the complete IR pipeline</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Preprocessing Module Card -->
+      <div class="module-preview-card fade-in-up" style="animation-delay: 0s;">
+        <div class="flex items-start justify-between gap-3 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 flex items-center justify-center text-xl text-cyan-300">
+              <i class="fa-solid fa-sliders"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">Preprocessing</h3>
+          </div>
+        </div>
+        <p class="text-slate-400 text-sm mb-4 leading-relaxed">
+          Clean and prepare text data with tokenization, normalization, and stemming techniques.
+        </p>
+        <div class="space-y-2 mb-4 text-sm text-slate-300">
+          <p><span class="text-cyan-400 font-semibold">→</span> Tokenization</p>
+          <p><span class="text-cyan-400 font-semibold">→</span> Normalization</p>
+          <p><span class="text-cyan-400 font-semibold">→</span> Stop Word Removal</p>
+          <p><span class="text-cyan-400 font-semibold">→</span> Stemming & Lemmatization</p>
+        </div>
+        <a href="{{ url_for('preprocessing_page') }}" class="text-cyan-300 hover:text-cyan-200 text-sm font-semibold inline-flex items-center gap-2 transition-colors">
+          Explore <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <!-- Spelling Correction Module Card -->
+      <div class="module-preview-card fade-in-up" style="animation-delay: 0.1s;">
+        <div class="flex items-start justify-between gap-3 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-500/5 flex items-center justify-center text-xl text-purple-300">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">Spelling Correction</h3>
+          </div>
+        </div>
+        <p class="text-slate-400 text-sm mb-4 leading-relaxed">
+          Discover how algorithms detect and correct typos and misspellings.
+        </p>
+        <div class="space-y-2 mb-4 text-sm text-slate-300">
+          <p><span class="text-purple-400 font-semibold">→</span> Edit Distance</p>
+          <p><span class="text-purple-400 font-semibold">→</span> Jaccard Coefficient</p>
+          <p><span class="text-purple-400 font-semibold">→</span> Soundex Algorithm</p>
+          <p><span class="text-purple-400 font-semibold">→</span> Similarity Ranking</p>
+        </div>
+        <a href="{{ url_for('spelling_page') }}" class="text-purple-300 hover:text-purple-200 text-sm font-semibold inline-flex items-center gap-2 transition-colors">
+          Explore <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <!-- Information Retrieval Module Card -->
+      <div class="module-preview-card fade-in-up" style="animation-delay: 0.2s;">
+        <div class="flex items-start justify-between gap-3 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-500/5 flex items-center justify-center text-xl text-blue-300">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">IR Algorithms</h3>
+          </div>
+        </div>
+        <p class="text-slate-400 text-sm mb-4 leading-relaxed">
+          Visualize and understand modern information retrieval algorithms and ranking models.
+        </p>
+        <div class="space-y-2 mb-4 text-sm text-slate-300">
+          <p><span class="text-blue-400 font-semibold">→</span> Term-Document Matrix</p>
+          <p><span class="text-blue-400 font-semibold">→</span> Inverted Index</p>
+          <p><span class="text-blue-400 font-semibold">→</span> TF-IDF & Cosine Similarity</p>
+          <p><span class="text-blue-400 font-semibold">→</span> Search & Ranking</p>
+        </div>
+        <a href="{{ url_for('retrieval_page') }}" class="text-blue-300 hover:text-blue-200 text-sm font-semibold inline-flex items-center gap-2 transition-colors">
+          Explore <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why P4L Retrieval Section -->
+<section class="relative px-4 py-16 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="text-center space-y-3 mb-12">
+      <h2 class="text-3xl sm:text-4xl font-black text-white">Why P4L Retrieval?</h2>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto">Learn Information Retrieval the modern way</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Feature Card 1 -->
+      <div class="concept-card fade-in-up" style="animation-delay: 0s;">
+        <div class="concept-card-top">
+          <div class="concept-icon">
+            <i class="fa-solid fa-eye"></i>
+          </div>
+          <div>
+            <h4>Visual Learning</h4>
+            <p>See algorithms in action with real-time visualizations</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Card 2 -->
+      <div class="concept-card fade-in-up" style="animation-delay: 0.05s;">
+        <div class="concept-card-top">
+          <div class="concept-icon">
+            <i class="fa-solid fa-flask"></i>
+          </div>
+          <div>
+            <h4>Interactive Experiments</h4>
+            <p>Experiment with different inputs and observe instant results</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Card 3 -->
+      <div class="concept-card fade-in-up" style="animation-delay: 0.1s;">
+        <div class="concept-card-top">
+          <div class="concept-icon">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div>
+            <h4>Educational Focus</h4>
+            <p>Designed specifically for learning IR concepts from scratch</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Card 4 -->
+      <div class="concept-card fade-in-up" style="animation-delay: 0.15s;">
+        <div class="concept-card-top">
+          <div class="concept-icon">
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <div>
+            <h4>Algorithm Demo</h4>
+            <p>Understand how TF-IDF, indexing, and ranking actually work</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Card 5 -->
+      <div class="concept-card fade-in-up" style="animation-delay: 0.2s;">
+        <div class="concept-card-top">
+          <div class="concept-icon">
+            <i class="fa-solid fa-mobile"></i>
+          </div>
+          <div>
+            <h4>Fully Responsive</h4>
+            <p>Learn on desktop, tablet, or mobile devices</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Card 6 -->
+      <div class="concept-card fade-in-up" style="animation-delay: 0.25s;">
+        <div class="concept-card-top">
+          <div class="concept-icon">
+            <i class="fa-solid fa-rocket"></i>
+          </div>
+          <div>
+            <h4>Modern Technology</h4>
+            <p>Built with Python, Flask, and cutting-edge NLP techniques</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Target Audience Section -->
+<section class="relative px-4 py-16 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="text-center space-y-3 mb-12">
+      <h2 class="text-3xl sm:text-4xl font-black text-white">Perfect For</h2>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto">Who should explore this platform?</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="pipeline-card text-center p-6 fade-in-up" style="animation-delay: 0s;">
+        <div class="mx-auto mb-3 w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 flex items-center justify-center text-lg text-cyan-300">
+          <i class="fa-solid fa-book"></i>
+        </div>
+        <h4 class="text-white font-bold mb-2">Students</h4>
+        <p class="text-sm text-slate-400">Computer Science and NLP students</p>
+      </div>
+
+      <div class="pipeline-card text-center p-6 fade-in-up" style="animation-delay: 0.05s;">
+        <div class="mx-auto mb-3 w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-500/5 flex items-center justify-center text-lg text-purple-300">
+          <i class="fa-solid fa-brain"></i>
+        </div>
+        <h4 class="text-white font-bold mb-2">Learners</h4>
+        <p class="text-sm text-slate-400">Anyone exploring IR and NLP concepts</p>
+      </div>
+
+      <div class="pipeline-card text-center p-6 fade-in-up" style="animation-delay: 0.1s;">
+        <div class="mx-auto mb-3 w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-500/5 flex items-center justify-center text-lg text-blue-300">
+          <i class="fa-solid fa-lightbulb"></i>
+        </div>
+        <h4 class="text-white font-bold mb-2">Researchers</h4>
+        <p class="text-sm text-slate-400">Experimenting with algorithm implementations</p>
+      </div>
+
+      <div class="pipeline-card text-center p-6 fade-in-up" style="animation-delay: 0.15s;">
+        <div class="mx-auto mb-3 w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500/20 to-pink-500/5 flex items-center justify-center text-lg text-pink-300">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <h4 class="text-white font-bold mb-2">Enthusiasts</h4>
+        <p class="text-sm text-slate-400">Search engine and AI technology enthusiasts</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Technologies Section -->
+<section class="relative px-4 py-16 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="text-center space-y-3 mb-12">
+      <h2 class="text-3xl sm:text-4xl font-black text-white">Technology Stack</h2>
+      <p class="text-slate-400 text-lg">Built with modern, proven technologies</p>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="px-4 py-2 rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 text-sm font-semibold fade-in-up">
+        <i class="fa-brands fa-python mr-2"></i>Python
+      </span>
+      <span class="px-4 py-2 rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 text-sm font-semibold fade-in-up">
+        <i class="fa-solid fa-flask mr-2"></i>Flask
+      </span>
+      <span class="px-4 py-2 rounded-lg border border-purple-500/30 bg-purple-500/10 text-purple-300 text-sm font-semibold fade-in-up">
+        <i class="fa-brands fa-html5 mr-2"></i>HTML5
+      </span>
+      <span class="px-4 py-2 rounded-lg border border-purple-500/30 bg-purple-500/10 text-purple-300 text-sm font-semibold fade-in-up">
+        <i class="fa-brands fa-css3 mr-2"></i>CSS3
+      </span>
+      <span class="px-4 py-2 rounded-lg border border-blue-500/30 bg-blue-500/10 text-blue-300 text-sm font-semibold fade-in-up">
+        <i class="fa-brands fa-js mr-2"></i>JavaScript
+      </span>
+      <span class="px-4 py-2 rounded-lg border border-blue-500/30 bg-blue-500/10 text-blue-300 text-sm font-semibold fade-in-up">
+        <i class="fa-solid fa-brain mr-2"></i>NLP
+      </span>
+      <span class="px-4 py-2 rounded-lg border border-pink-500/30 bg-pink-500/10 text-pink-300 text-sm font-semibold fade-in-up">
+        <i class="fa-solid fa-magnifying-glass mr-2"></i>IR Algorithms
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA Section -->
+<section class="relative px-4 py-16 sm:px-6 lg:px-8 pb-20">
+  <div class="mx-auto max-w-7xl">
+    <div class="glass-card p-10 sm:p-12 text-center space-y-6 fade-in-up">
+      <h2 class="text-3xl sm:text-4xl font-black text-white">Start Exploring Information Retrieval</h2>
+      <p class="text-lg text-slate-300 max-w-2xl mx-auto">
+        Dive into the preprocessing module to begin your journey into information retrieval and NLP.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="{{ url_for('preprocessing_page') }}" class="primary-btn">
+          <i class="fa-solid fa-play"></i>
+          Open Preprocessing
+        </a>
+        <a href="{{ url_for('retrieval_page') }}" class="secondary-btn">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          Jump to Retrieval
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fade in animation for sections */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.delay-1 {
+  animation-delay: 0.2s;
+}
+
+/* Module cards specific styling */
+.module-preview-card {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+</style>
+{% endblock %}
