@@ -400,6 +400,38 @@ def api_retrieval_prepare():
             "vocabulary": vocabulary,
             "docs": docs
         })
+    elif algorithm == "tfidf":
+        import math
+        total_docs = len(docs)
+        idf = {}
+        if total_docs > 0:
+            for term in vocabulary:
+                doc_count = sum(1 for doc in docs if term in set(doc["tokens"]))
+                idf[term] = round(math.log10(total_docs / doc_count), 4) if doc_count > 0 else 0.0
+
+        for doc in docs:
+            doc_tokens = doc["tokens"]
+            total_terms = len(doc_tokens)
+            
+            tf = {}
+            for term in doc_tokens:
+                tf[term] = tf.get(term, 0) + 1
+            for term in tf:
+                tf[term] = round(1 + math.log10(tf[term]), 4)
+            doc["tf"] = tf
+            
+            doc["tfidf_vector"] = []
+            for term in vocabulary:
+                term_tf = tf.get(term, 0.0)
+                term_idf = idf.get(term, 0.0)
+                doc["tfidf_vector"].append(round(term_tf * term_idf, 4))
+                
+        return jsonify({
+            "algorithm": "tfidf",
+            "vocabulary": vocabulary,
+            "idf": idf,
+            "docs": docs
+        })
     else:
         # TDM logic (default)
         for doc in docs:
@@ -476,57 +508,98 @@ def api_retrieval_search():
         results.sort(key=lambda x: x["score"], reverse=True)
         return jsonify({"results": results})
 
+    elif algorithm == "tfidf":
+        import math
+        query_tokens = _preprocess_pipeline(query)
+        total_terms = len(query_tokens)
+        
+        query_tf = {}
+        if total_terms > 0:
+            for term in query_tokens:
+                query_tf[term] = query_tf.get(term, 0) + 1
+            for term in query_tf:
+                query_tf[term] = 1 + math.log10(query_tf[term])
+                
+        idf = matrix_data.get("idf", {})
+        
+        query_vector = []
+        for term in vocabulary:
+            term_tf = query_tf.get(term, 0.0)
+            term_idf = float(idf.get(term, 0.0))
+            query_vector.append(term_tf * term_idf)
+            
+        results = []
+        for doc in docs:
+            doc_vector = doc.get("tfidf_vector", [])
+            if not doc_vector or len(doc_vector) != len(query_vector):
+                continue
+                
+            dot_product = sum(q * d for q, d in zip(query_vector, doc_vector))
+            q_mag = math.sqrt(sum(q * q for q in query_vector))
+            d_mag = math.sqrt(sum(d * d for d in doc_vector))
+            
+            if q_mag == 0 or d_mag == 0:
+                score = 0.0
+            else:
+                score = dot_product / (q_mag * d_mag)
+                
+            if score > 0:
+                original_text = doc.get("original_text", "")
+                snippet = original_text[:100]
+                words = original_text.split()
+                for i, word in enumerate(words):
+                    if _lemmatize_token(word.lower().strip(",.!?()\"'")) in query_tokens:
+                        start = max(0, i - 5)
+                        end = min(len(words), i + 15)
+                        snippet = " ".join(words[start:end])
+                        break
+                        
+                results.append({
+                    "name": doc["name"],
+                    "score": round(score, 4),
+                    "snippet": snippet,
+                    "matched_terms": list(set([term for term in vocabulary if term in query_tokens and term in doc.get("tf", {})])),
+                    "doc": doc,
+                    "query_tokens": list(set(query_tokens))
+                })
+                
+        results.sort(key=lambda x: x["score"], reverse=True)
+        return jsonify({"results": results})
+
     # TDM SEARCH
     query_tokens = _preprocess_pipeline(query)
-    query_vector = [1 if term in query_tokens else 0 for term in vocabulary]
+    query_set = set(query_tokens)
+
+    doc_scores: dict[str, dict[str, Any]] = {}
+    for token in query_tokens:
+        for doc in docs:
+            doc_tokens_set = set(doc.get("tokens", []))
+            if token not in doc_tokens_set:
+                continue
+            doc_name = str(doc.get("name", ""))
+            if doc_name not in doc_scores:
+                doc_scores[doc_name] = {"score": 0, "matched_terms": set(), "doc": doc}
+            doc_scores[doc_name]["score"] += 1
+            doc_scores[doc_name]["matched_terms"].add(token)
 
     results = []
+    for doc_name, score_data in doc_scores.items():
+        doc = score_data["doc"]
+        matched_terms = sorted(score_data["matched_terms"])
+        score = score_data["score"] / len(query_tokens) if query_tokens else 0
+        snippet = _build_snippet(str(doc.get("original_text", "")), query_set)
+        results.append({
+            "name": doc_name,
+            "score": score,
+            "matched_terms": matched_terms,
+            "snippet": f"{snippet}...",
+            "doc": doc,
+            "query_tokens": query_tokens
+        })
 
-    # Calculate similarity (dot product of binary vectors)
-    import math
-    for doc in docs:
-        doc_vector = doc["term_vector"]
-
-        # dot product
-        dot_product = sum(q * d for q, d in zip(query_vector, doc_vector))
-
-        # magnitudes
-        q_mag = math.sqrt(sum(q * q for q in query_vector))
-        d_mag = math.sqrt(sum(d * d for d in doc_vector))
-
-        if q_mag == 0 or d_mag == 0:
-            score = 0
-        else:
-            score = dot_product / (q_mag * d_mag)
-
-        if score > 0:
-            # Find a snippet
-            original_text = doc["original_text"]
-            snippet = original_text[:100] # default snippet
-
-            # Simple snippet logic: find first matching term in text
-            words = original_text.split()
-            for i, word in enumerate(words):
-                if _lemmatize_token(word.lower().strip(",.!?()\"'")) in query_tokens:
-                    start = max(0, i - 5)
-                    end = min(len(words), i + 15)
-                    snippet = " ".join(words[start:end])
-                    break
-
-            results.append({
-                "name": doc["name"],
-                "score": score,
-                "snippet": snippet,
-                "doc": doc,
-                "query_tokens": query_tokens
-            })
-
-    # Sort descending by score
     results.sort(key=lambda x: x["score"], reverse=True)
 
-    return jsonify({
-        "results": results
-    })
+    return jsonify({"results": results})
 
 
 @app.route("/api/preprocess", methods=["POST"])

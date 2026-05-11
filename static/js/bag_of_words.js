@@ -49,7 +49,7 @@ window.renderBoWVisualization = async function (data, speedKey) {
     vMatrix.appendChild(titleVec);
 
     const tableWrapper = document.createElement("div");
-    tableWrapper.className = "overflow-x-auto glass-card rounded-lg border border-slate-700/50";
+    tableWrapper.className = "overflow-x-auto glass-card rounded-lg border border-slate-700/50 custom-scrollbar-table";
 
     const table = document.createElement("table");
     table.className = "w-full text-left border-collapse text-sm whitespace-nowrap";
@@ -132,34 +132,25 @@ window.searchBoW = function (query, matrixData) {
     matrixData.docs.forEach((doc) => {
         let score = 0;
         let matchedTerms = new Set();
-        let totalQueryTerms = queryTokens.length;
 
-        // Calculate ranking score
-        // Depending on: Number of query words found in each document
-        // Let's count how many query terms exist in the document
-        // Example: Query "information retrieval" -> [information, retrieval]
-        // Doc1 contains both -> score 2/2 = 1.0 (or similar)
-        let termsFound = 0;
+        // Calculate ranking score based on total frequency of query terms in the document
+        const docFreqMap = {};
+        doc.tokens.forEach(t => docFreqMap[t] = (docFreqMap[t] || 0) + 1);
 
-        // To handle term duplication, we will match unique terms in query against document tokens
         const uniqueQueryTokens = Object.keys(queryFrq);
-        const docTokensSet = new Set(doc.tokens);
 
         uniqueQueryTokens.forEach(term => {
-            if (docTokensSet.has(term)) {
-                termsFound += 1; // Count of unique query terms found
+            if (docFreqMap[term]) {
+                score += docFreqMap[term]; // Sum the occurrences in the document
                 matchedTerms.add(term);
             }
         });
 
-        if (termsFound > 0) {
-            // normalized score based on unique query terms
-            score = termsFound / uniqueQueryTokens.length;
-
+        if (score > 0) {
             // Build snippet
             const docContent = String(doc.original_text || "");
             const snippetLength = 100;
-            let snippet = docContent;
+            let snippet;
 
             // Find first matched term to center snippet
             let firstMatchIdx = -1;
@@ -203,12 +194,16 @@ window.getBoWAboutHTML = function() {
     return `
     <div class="space-y-6">
         <h3 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Bag of Words (BoW) Representation</h3>
-        
-        <div class="aspect-video bg-slate-900 rounded-lg border border-slate-700 flex items-center justify-center relative shadow-inner">
-            <div class="text-center">
-                <i class="fa-solid fa-play text-4xl text-cyan-500 mb-3 opacity-80 hover:opacity-100 transition-opacity cursor-pointer"></i>
-                <p class="text-slate-400 text-sm">Educational Video: Understanding Bag of Words (Placeholder)</p>
-            </div>
+
+        <div class="mb-6 max-w-2xl mx-auto border border-slate-700 rounded overflow-hidden bg-black">
+           <iframe
+             class="w-full aspect-video"
+             src="https://www.youtube.com/embed/KSXIe75CUmE?si=ks67rVZl2MZVcO5L"
+             title="Bag of Words Educational Video"
+             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+             referrerpolicy="strict-origin-when-cross-origin"
+             allowfullscreen>
+           </iframe>
         </div>
 
         <div class="glass-card p-6">
@@ -246,15 +241,14 @@ window.getBoWAboutHTML = function() {
         <div class="glass-card p-6 border-l-4 border-l-cyan-500">
             <h4 class="text-xl font-semibold mb-3 text-cyan-300">How Search Ranking Works</h4>
             <p class="text-slate-300 leading-relaxed mb-3">
-                In this implementation, search ranking is based on the <strong>Number of query words found</strong> in each document. Documents containing a higher variety of the search terms receive a higher score.
+                In this implementation, search ranking is based on the <strong>total frequency (occurrences) of the query terms found</strong> in each document. Documents with a higher total count of the targeted words receive a higher score.
             </p>
             <ul class="list-disc list-inside text-slate-300 text-sm space-y-2">
                 <li>Query terms are cross-referenced with the document's vocabulary usage.</li>
-                <li>The score represents the percentage of unique query terms present in the document.</li>
-                <li>A document matching 2 out of 2 terms ranks higher (100%) than one matching only 1 out of 2 (50%).</li>
+                <li>The score represents the sum of the frequencies of all matched query terms in the document.</li>
+                <li>A document containing the search terms more times will rank higher.</li>
             </ul>
         </div>
     </div>
     `;
 };
-

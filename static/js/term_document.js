@@ -92,3 +92,46 @@ async function renderTDMVisualization(data, speedKey, skipSharedStages) {
 
 window.renderTDMVisualization = renderTDMVisualization;
 
+window.getTDMAboutHTML = function() {
+    return `
+        <div class="space-y-6">
+            <h3 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Term Document Matrix</h3>
+            
+            <div class="mb-6 max-w-2xl mx-auto border border-slate-700 rounded overflow-hidden bg-black">
+               <iframe
+                 class="w-full aspect-video"
+                 src="https://www.youtube.com/embed/CRPoXUPeYtw?si=j8KZnTQELPT1SLW6"
+                 title="Term Document Matrix Educational Video"
+                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                 referrerpolicy="strict-origin-when-cross-origin"
+                 allowfullscreen>
+               </iframe>
+            </div>
+            
+            <div class="glass-card p-6">
+                <h4 class="text-xl font-semibold mb-3 text-cyan-300">What is a Term Document Matrix?</h4>
+                <p class="text-slate-300 leading-relaxed mb-4">
+                    A <strong>Term-Document Matrix (TDM)</strong> is a mathematical matrix that describes the frequency of terms that occur in a collection of documents. In this basic implementation, we use binary weights (1 or 0) to represent whether a term is present in a document.
+                </p>
+                <p class="text-slate-300 leading-relaxed">
+                    The rows of the matrix correspond to documents, and the columns correspond to the terms in the vocabulary. 
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="glass-card p-5">
+                    <h4 class="text-lg font-bold mb-2 text-purple-300"><i class="fa-solid fa-list-ol"></i> Boolean Retrieval</h4>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        This simple TDM uses boolean weights (1 for presence, 0 for absence). This is the foundation of Boolean Information Retrieval models where queries are evaluated using set operations.
+                    </p>
+                </div>
+                <div class="glass-card p-5">
+                    <h4 class="text-lg font-bold mb-2 text-emerald-300"><i class="fa-solid fa-compress"></i> Sparsity</h4>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        A typical Term-Document Matrix is highly sparse, meaning most entries are 0 because any single document only contains a small fraction of the total vocabulary.
+                    </p>
+                </div>
+            </div>
+        </div>
+    `;
+};

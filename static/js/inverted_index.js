@@ -90,45 +90,7 @@ async function renderInvertedVisualization(data, speedKey) {
     }
 }
 
-function renderInvertedAboutContent() {
-    return `
-        <h3 class="text-2xl font-bold mb-4">About Inverted Index</h3>
-        <div class="glass-card p-5 mb-6 bg-slate-900/50 border border-cyan-500/20">
-          <p class="mb-4 text-slate-300">An inverted index maps each term to a posting list of documents where it appears.</p>
-          <p class="mb-2 font-bold text-cyan-300">Core idea:</p>
-          <p class="text-slate-300 text-sm">Search becomes fast because we look up terms directly in posting lists instead of scanning all documents.</p>
-        </div>
-        <div class="mb-6 max-w-2xl mx-auto border border-slate-700 rounded overflow-hidden bg-black">
-           <iframe
-             class="w-full aspect-video"
-             src="https://www.youtube.com/embed/Aeqw1GdDlwg?si=kn2BwgqeW7YoFiVK"
-             title="Inverted Index Educational Video"
-             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-             referrerpolicy="strict-origin-when-cross-origin"
-             allowfullscreen>
-           </iframe>
-        </div>
-        <div>
-          <h4 class="font-bold mb-2 text-purple-300">Example Posting Lists</h4>
-          <p class="text-sm text-slate-400 mb-4">Doc1: "information retrieval" | Doc2: "retrieval systems"</p>
-          <div class="space-y-2 font-mono text-sm">
-            <div class="glass-card p-3 flex items-center gap-4 border border-slate-800">
-              <span class="text-cyan-300 w-28">information -></span>
-              <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Doc1</span>
-            </div>
-            <div class="glass-card p-3 flex items-center gap-4 border border-slate-800">
-              <span class="text-cyan-300 w-28">retrieval -></span>
-              <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Doc1</span>
-              <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Doc2</span>
-            </div>
-            <div class="glass-card p-3 flex items-center gap-4 border border-slate-800">
-              <span class="text-cyan-300 w-28">systems -></span>
-              <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Doc2</span>
-            </div>
-          </div>
-        </div>
-    `;
-}
+// function was renamed and moved to end of file
 
 function buildSnippet(text, terms) {
     const words = String(text || "").split(/\s+/).filter(Boolean);
@@ -185,5 +147,63 @@ function searchInvertedIndex(query, matrixData) {
 }
 
 window.renderInvertedVisualization = renderInvertedVisualization;
-window.renderInvertedAboutContent = renderInvertedAboutContent;
+window.getInvertedIndexAboutHTML = function() {
+    return `
+        <h3 class="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Inverted Index</h3>
+        
+        <div class="mb-6 max-w-2xl mx-auto border border-slate-700 rounded overflow-hidden bg-black">
+           <iframe
+             class="w-full aspect-video"
+             src="https://www.youtube.com/embed/Aeqw1GdDlwg?si=kn2BwgqeW7YoFiVK"
+             title="Inverted Index Educational Video"
+             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+             referrerpolicy="strict-origin-when-cross-origin"
+             allowfullscreen>
+           </iframe>
+        </div>
+
+        <div class="glass-card p-6">
+            <h4 class="text-xl font-semibold mb-3 text-cyan-300">What is an Inverted Index?</h4>
+            <p class="text-slate-300 leading-relaxed mb-4">An inverted index maps each term to a posting list of documents where it appears.</p>
+            <p class="text-slate-300 leading-relaxed">
+                Search becomes fast because we look up terms directly in posting lists instead of scanning all documents.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="glass-card p-5">
+                <h4 class="text-lg font-bold mb-2 text-purple-300"><i class="fa-solid fa-list"></i> Posting Lists</h4>
+                <p class="text-sm text-slate-300 leading-relaxed">
+                    Each term in the index points to a list of documents (or document positions) where that term appears. This structure enables rapid lookups.
+                </p>
+            </div>
+            <div class="glass-card p-5">
+                <h4 class="text-lg font-bold mb-2 text-emerald-300"><i class="fa-solid fa-bolt"></i> Fast Retrieval</h4>
+                <p class="text-sm text-slate-300 leading-relaxed">
+                    Instead of scanning every document for query terms, we directly access posting lists, making boolean and phrase queries extremely efficient.
+                </p>
+            </div>
+        </div>
+
+        <div class="glass-card p-6 border-l-4 border-l-cyan-500 mt-6">
+            <h4 class="text-lg font-bold mb-3 text-purple-300">Example Posting Lists</h4>
+            <p class="text-sm text-slate-400 mb-4">Doc1: "information retrieval" | Doc2: "retrieval systems"</p>
+            <div class="space-y-2 font-mono text-sm">
+                <div class="glass-card p-3 flex items-center gap-4 border border-slate-800">
+                  <span class="text-cyan-300 w-28">information -></span>
+                  <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Doc1</span>
+                </div>
+                <div class="glass-card p-3 flex items-center gap-4 border border-slate-800">
+                  <span class="text-cyan-300 w-28">retrieval -></span>
+                  <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Doc1</span>
+                  <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Doc2</span>
+                </div>
+                <div class="glass-card p-3 flex items-center gap-4 border border-slate-800">
+                  <span class="text-cyan-300 w-28">systems -></span>
+                  <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">Doc2</span>
+                </div>
+            </div>
+        </div>
+    `;
+};
 window.searchInvertedIndex = searchInvertedIndex;

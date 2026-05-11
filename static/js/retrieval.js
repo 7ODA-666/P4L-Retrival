@@ -217,6 +217,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 await window.renderInvertedVisualization(data, speedKey);
             } else if (algo === 'bow' && window.renderBoWVisualization) {
                 await window.renderBoWVisualization(data, speedKey);
+            } else if (algo === 'tfidf' && window.renderTFIDFVisualization) {
+                await window.renderTFIDFVisualization(data, speedKey);
             } else if (window.renderTDMVisualization) {
                 await window.renderTDMVisualization(data, speedKey);
             } else if (window.renderSharedStages) {
@@ -243,6 +245,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             } else if (algo === "bow" && window.searchBoW) {
                 const localResults = window.searchBoW(query, matrixData);
+                renderSearchResults(localResults);
+                return;
+            } else if (algo === "tfidf" && window.searchTFIDF) {
+                const localResults = window.searchTFIDF(query, matrixData);
                 renderSearchResults(localResults);
                 return;
             }
@@ -290,6 +296,8 @@ function renderAboutContent() {
         container.innerHTML = window.getInvertedIndexAboutHTML();
     } else if (algo === "bow" && window.getBoWAboutHTML) {
         container.innerHTML = window.getBoWAboutHTML();
+    } else if (algo === "tfidf" && window.getTFIDFAboutHTML) {
+        container.innerHTML = window.getTFIDFAboutHTML();
     } else if (window.getTDMAboutHTML) {
         container.innerHTML = window.getTDMAboutHTML();
     }
@@ -377,6 +385,8 @@ function renderSearchResults(results) {
     const speedSel = document.getElementById("viz-speed");
     const speedKey = speedSel ? speedSel.value : "medium";
     const cardDelay = getSearchResultDelay(speedKey);
+    const algoSelect = document.getElementById("algoSelect");
+    const activeAlgo = algoSelect ? algoSelect.value : "tdm";
 
     results.forEach((r, idx) => {
         let isInv = !!r.matched_terms; // Presence of matched terms array means inverted index
@@ -387,12 +397,16 @@ function renderSearchResults(results) {
 
         const item = document.createElement("div");
         item.className = "p-4 border-b border-slate-700/50 hover:bg-slate-800/30 transition-all duration-300 flex gap-4 cursor-pointer opacity-0 translate-y-2";
+        // Show raw counts for BoW, and percentages for TDM / Inverted Index / TF-IDF.
+        const scoreLabel = activeAlgo === "bow"
+            ? `${r.score}`
+            : `${(Number(r.score) * 100).toFixed(1)}%`;
         item.innerHTML = `
             <div class="mt-1"><i class="fa-solid fa-file-pdf text-purple-400 text-xl"></i></div>
             <div class="flex-1">
                 <div class="flex justify-between items-start mb-1">
                     <h4 class="font-bold text-cyan-300">${r.name}</h4>
-                    <span class="text-emerald-400 font-mono text-sm bg-emerald-900/20 px-2 py-1 rounded border border-emerald-800/50">Score: ${(r.score * 100).toFixed(1)}%</span>
+                    <span class="text-emerald-400 font-mono text-sm bg-emerald-900/20 px-2 py-1 rounded border border-emerald-800/50">Score: ${scoreLabel}</span>
                 </div>
                 ${isInv ? `<div class="mb-2 text-xs text-slate-400">Matched terms: ${termsDisplay}</div>` : ''}
                 <p class="text-sm text-slate-400 leading-relaxed">${r.snippet}</p>

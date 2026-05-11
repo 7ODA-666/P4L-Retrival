@@ -230,3 +230,23 @@
   z-index: 3;
 }
 
+/* Custom scrollbar for BoW and TF-IDF visualization tables */
+.custom-scrollbar-table {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34,211,238,0.24) transparent;
+}
+.custom-scrollbar-table::-webkit-scrollbar {
+  height: 10px; /* horizontal scrollbar thickness */
+}
+.custom-scrollbar-table::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar-table::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(34,211,238,0.22), rgba(168,85,247,0.22));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.custom-scrollbar-table::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, rgba(34,211,238,0.36), rgba(168,85,247,0.36));
+}

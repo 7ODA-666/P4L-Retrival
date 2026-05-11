@@ -47,7 +47,7 @@
           <option value="tdm">Term Document Matrix</option>
           <option value="inverted">Inverted Index</option>
           <option value="bow">Bag of Words</option>
-          <option value="tfidf" disabled>TF-IDF Weight Matrix (Soon)</option>
+          <option value="tfidf">TF-IDF Weight Matrix</option>
         </select>
       </div>
 
@@ -144,4 +144,5 @@
 <script src="{{ url_for('static', filename='js/term_document.js') }}"></script>
 <script src="{{ url_for('static', filename='js/inverted_index.js') }}"></script>
 <script src="{{ url_for('static', filename='js/bag_of_words.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tfidf.js') }}"></script>
 {% endblock %}
