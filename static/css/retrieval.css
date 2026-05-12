@@ -1,4 +1,9 @@
 /* retrieval.css */
+.retrieval-page-title-main,
+.retrieval-page-title-accent {
+  display: inline-block;
+}
+
 .retrieval-container {
   display: flex;
   gap: 1.5rem;
@@ -228,6 +233,135 @@
 /* Ensure the table headers remain visible over the scrollbar area on small screens */
 .matrix-table thead th {
   z-index: 3;
+}
+
+/* Light mode refinements for retrieval page */
+html.light .retrieval-page-title-main {
+  color: #000000 !important;
+}
+
+html.light .retrieval-page-title-accent {
+  background: linear-gradient(90deg, #0ea5e9 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+html.light .retrieval-container,
+html.light .left-panel,
+html.light .right-panel {
+  color: #0f172a;
+}
+
+html.light .tab-nav {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+html.light .tab-btn {
+  color: #475569;
+}
+
+html.light .tab-btn:hover {
+  color: #0f172a;
+}
+
+html.light .tab-btn.active {
+  color: #0f172a;
+  border-bottom-color: #0ea5e9;
+}
+
+html.light .file-list-item {
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+html.light .file-list-item i {
+  color: #0ea5e9;
+}
+
+html.light .file-remove-btn {
+  color: #e11d48;
+}
+
+html.light .matrix-container {
+  border-color: rgba(15, 23, 42, 0.10);
+}
+
+html.light .matrix-table th,
+html.light .matrix-table td {
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+html.light .matrix-table th {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f172a;
+}
+
+html.light .matrix-table th:first-child,
+html.light .matrix-table td:first-child {
+  background: rgba(248, 250, 252, 0.96);
+  color: #0f172a;
+}
+
+html.light .modal-overlay {
+  background: rgba(15, 23, 42, 0.40);
+}
+
+html.light .modal-content {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(15, 23, 42, 0.10);
+}
+
+html.light .modal-header {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+html.light .modal-body {
+  color: #334155;
+}
+
+html.light .highlight-match {
+  background: rgba(14, 165, 233, 0.14);
+  color: #0f172a;
+}
+
+html.light #algoSelect,
+html.light #viz-speed,
+html.light #searchInput {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+html.light #searchInput::placeholder {
+  color: #94a3b8;
+}
+
+html.light .retrieval-container .text-white,
+html.light .retrieval-container .text-slate-300,
+html.light .retrieval-container .text-slate-400,
+html.light .retrieval-container .text-slate-500 {
+  color: #475569 !important;
+}
+
+html.light .retrieval-container h2,
+html.light .retrieval-container h3,
+html.light .retrieval-container label,
+html.light .retrieval-container p,
+html.light .retrieval-container option {
+  color: #0f172a;
+}
+
+html.light #v-success,
+html.light #v-success-bottom {
+  background: rgba(16, 185, 129, 0.10) !important;
+  border-color: rgba(16, 185, 129, 0.20) !important;
+  color: #047857 !important;
+}
+
+html.light #v-original p,
+html.light #searchResults p {
+  color: #64748b;
 }
 
 /* Custom scrollbar for BoW and TF-IDF visualization tables */

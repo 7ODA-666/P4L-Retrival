@@ -471,6 +471,14 @@
   color: #fec89a;
 }
 
+.preprocessing-page-title-main {
+  display: inline-block;
+}
+
+.preprocessing-page-title-accent {
+  display: inline-block;
+}
+
 /* Light mode refinements for preprocessing pages */
 html.light .edu-tab {
   color: #475569;
@@ -483,6 +491,17 @@ html.light .edu-tab:hover {
 
 html.light .edu-tab.active {
   color: #0f172a;
+}
+
+html.light .preprocessing-page-title-main {
+  color: #000000 !important;
+}
+
+html.light .preprocessing-page-title-accent {
+  background: linear-gradient(90deg, #0ea5e9 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
 }
 
 html.light .control-card,
