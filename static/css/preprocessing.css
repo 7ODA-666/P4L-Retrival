@@ -471,4 +471,114 @@
   color: #fec89a;
 }
 
+/* Light mode refinements for preprocessing pages */
+html.light .edu-tab {
+  color: #475569;
+}
+
+html.light .edu-tab:hover {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+html.light .edu-tab.active {
+  color: #0f172a;
+}
+
+html.light .control-card,
+html.light .viz-area,
+html.light .step-card,
+html.light .norm-card {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(15, 23, 42, 0.10);
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+}
+
+html.light .viz-header {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+html.light .viz-placeholder {
+  color: #475569;
+  border-color: rgba(15, 23, 42, 0.16);
+  background: rgba(248, 250, 252, 0.85);
+}
+
+html.light .edu-textarea {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+html.light .operation-item:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+html.light .operation-checkmark {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+html.light .operation-label,
+html.light .step-content,
+html.light .step-desc,
+html.light .step-meta {
+  color: #475569;
+}
+
+html.light .edu-btn-secondary,
+html.light .speed-select {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+html.light .step-title,
+html.light .step-badge.pill {
+  color: #0f172a;
+}
+
+html.light .step-header {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+html.light .tokens-badge {
+  background: rgba(14, 165, 233, 0.10);
+  color: #0f766e;
+  border-color: rgba(14, 165, 233, 0.14);
+}
+
+html.light .token {
+  color: #0f766e;
+}
+
+html.light .norm-title.case {
+  color: #0ea5e9;
+}
+
+html.light .norm-title.remove {
+  color: #059669;
+}
+
+html.light .norm-title.expand {
+  color: #f97316;
+}
+
+html.light .viz-area strong,
+html.light .control-card label,
+html.light .control-card p,
+html.light .norm-card p,
+html.light .norm-card strong {
+  color: #0f172a;
+}
+
+html.light .normalization-subops {
+  border-left-color: rgba(15, 23, 42, 0.14);
+}
+
+html.light .step-badge {
+  background: rgba(6, 182, 212, 0.12);
+  color: #0f766e;
+}
+
 

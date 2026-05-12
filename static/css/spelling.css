@@ -382,7 +382,7 @@
 .sim-progress-bar {
   height: 100%;
   background: linear-gradient(90deg, #22d3ee, #a855f7);
-  width: 0%;
+  width: 0;
   transition: width 1s ease-out;
 }
 
@@ -574,6 +574,200 @@
   border-color: rgba(196, 181, 253, 0.4);
   background: rgba(124, 58, 237, 0.18);
   color: #c4b5fd;
+}
+
+.spell-page-title-accent {
+  display: inline-block;
+}
+
+/* Light mode refinements for spelling pages */
+html.light .edu-tab {
+  color: #475569;
+}
+
+html.light .edu-tab:hover {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+html.light .edu-tab.active {
+  color: #0f172a;
+}
+
+html.light .spell-page-title {
+  color: #0f172a !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+html.light .spell-page-title-main {
+  color: #000000 !important;
+}
+
+html.light .spell-page-title-accent {
+  background: linear-gradient(90deg, #047857 0%, #0f766e 50%, #0ea5e9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+}
+
+html.light .control-card,
+html.light .viz-area,
+html.light .result-card,
+html.light .step-list-card,
+html.light .example-card,
+html.light .formula-showcase,
+html.light .notes-box,
+html.light .calc-card,
+html.light .why-box,
+html.light .spell-icon-wrap,
+html.light .chip,
+html.light .formula-card,
+html.light .soundex-box {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(15, 23, 42, 0.10);
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+}
+
+html.light .edu-input,
+html.light .edu-select {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+html.light .edu-input::placeholder {
+  color: #94a3b8;
+}
+
+html.light .edu-input:focus {
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.14);
+}
+
+html.light .viz-area,
+html.light .control-card {
+  background: rgba(255, 255, 255, 0.86);
+}
+
+html.light .viz-header,
+html.light .result-card,
+html.light .step-header {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+html.light .explanation-panel {
+  background: rgba(240, 253, 250, 0.9);
+  border-color: rgba(20, 184, 166, 0.18);
+  color: #0f172a;
+}
+
+html.light .step-log {
+  background: rgba(15, 23, 42, 0.04);
+  border-left-color: #14b8a6;
+  color: #334155;
+}
+
+html.light .edit-distance-matrix th,
+html.light .cell-info,
+html.light .step-meta,
+html.light .step-desc,
+html.light .spell-steps,
+html.light .notes-box p,
+html.light .soundex-steps,
+html.light .formula-card,
+html.light .formula-den,
+html.light .formula-num {
+  color: #475569;
+}
+
+html.light .matrix-cell {
+  background: rgba(248, 250, 252, 0.92);
+  border-color: rgba(15, 23, 42, 0.10);
+}
+
+html.light .matrix-cell.filled,
+html.light .cell-main-val,
+html.light .result-card p,
+html.light .soundex-box,
+html.light .step-title,
+html.light .spell-subtitle,
+html.light .spell-icon-wrap,
+html.light .chip {
+  color: #0f172a;
+}
+
+html.light .matrix-cell.active {
+  background: rgba(20, 184, 166, 0.12);
+  border-color: #14b8a6;
+  box-shadow: 0 0 15px rgba(20, 184, 166, 0.18);
+}
+
+html.light .matrix-cell.final-path {
+  background: rgba(168, 85, 247, 0.10);
+  border-color: #a855f7;
+}
+
+html.light .step-card,
+html.light .result-card {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+html.light .result-card h3 {
+  color: #059669;
+}
+
+html.light .result-card p {
+  color: #0f172a;
+}
+
+html.light .sim-progress-container {
+  background: rgba(15, 23, 42, 0.08);
+}
+
+html.light .soundex-box,
+html.light .formula-card {
+  background: rgba(248, 250, 252, 0.9);
+  border-color: rgba(15, 23, 42, 0.10);
+}
+
+html.light .formula-num {
+  border-bottom-color: rgba(15, 23, 42, 0.24);
+}
+
+html.light .formula-fraction,
+html.light .soundex-match,
+html.light .soundex-mismatch {
+  color: inherit;
+}
+
+html.light .spell-subtitle {
+  color: #0f172a;
+}
+
+html.light .spell-icon-wrap {
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+html.light .notes-box {
+  border-left-color: rgba(20, 184, 166, 0.8);
+}
+
+html.light .why-box {
+  background: rgba(254, 243, 199, 0.7);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+html.light .why-box h3 {
+  color: #92400e;
+}
+
+html.light .why-box p {
+  color: #78350f;
+}
+
+html.light .soundex-pill {
+  background: rgba(124, 58, 237, 0.10);
+  border-color: rgba(124, 58, 237, 0.24);
+  color: #6d28d9;
 }
 
 @media (max-width: 1024px) {
